@@ -1,7 +1,5 @@
 #include <Arduino.h>
-#include "app/load/circulin.h"
-#include "app/load/led.h"
-#include "app/load/pilot.h"
+#include "app/load/load.h"
 #include "app/screen/screen.h"
 #include "app/sensor/distance.h"
 #include "app/sensor/temphumi.h"
@@ -40,6 +38,8 @@ void setup()
 
   distance_init();
   temphumi_init();
+  load_init();
+  load_toogling_led();
   // sensor
   // distance_init();
   // humidity_init();
@@ -49,16 +49,18 @@ void setup()
 
   // wheel
   // wheel_init();
-  pinMode(13, OUTPUT);
+  //pinMode(13, OUTPUT);
 }
-int i = 0;
+//int i = 0;
+
 void loop()
 {
-  digitalWrite(13, 1);
-  delay(100);
-  digitalWrite(13, 0);
-  delay(100);
+  //digitalWrite(13, 1);
+ // delay(100);
+ // digitalWrite(13, 0);
+  //delay(100);
 
+/*
   bool reading_success = false;
   // DISTANCE
   int mm = 0;
@@ -78,6 +80,7 @@ void loop()
     screen_print_EnvironmentHumidity(humidity);
   }
   delay(1000);
+  */
   /*
     screen_notification_t notification;
     notification.color = SCREEN_COLOR_GREEN;
