@@ -19,19 +19,19 @@ typedef enum
 } screen_page_t;
 
 void screen_init();
-void screen_print_DistanceFront(float value);
-void screen_print_DistanceRightFront(float value);
-void screen_print_DistanceRightMiddle(float value);
-void screen_print_DistanceRightBack(float value);
-void screen_print_DistanceLeftFront(float value);
-void screen_print_DistanceLeftMiddle(float value);
-void screen_print_DistanceLeftBack(float value);
-void screen_print_DistanceBackRight(float value);
-void screen_print_DistanceBackLeft(float value);
+void screen_print_DistanceFront(float cm);
+void screen_print_DistanceRightFront(float cm);
+void screen_print_DistanceRightMiddle(float cm);
+void screen_print_DistanceRightBack(float cm);
+void screen_print_DistanceLeftFront(float cm);
+void screen_print_DistanceLeftMiddle(float cm);
+void screen_print_DistanceLeftBack(float cm);
+void screen_print_DistanceBackRight(float cm);
+void screen_print_DistanceBackLeft(float cm);
 
-void screen_print_BatteryLevel(float value);
-void screen_print_EnvironmentTemperature(float value);
-void screen_print_EnvironmentHumidity(float value);
+void screen_print_BatteryLevel(float percent);
+void screen_print_EnvironmentTemperature(float celsius);
+void screen_print_EnvironmentHumidity(float percent);
 
 void screen_print_Notification1();
 void screen_print_Notification2();

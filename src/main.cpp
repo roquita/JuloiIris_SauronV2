@@ -4,6 +4,7 @@
 #include "app/load/pilot.h"
 #include "app/screen/screen.h"
 #include "app/sensor/distance.h"
+#include "app/sensor/temphumi.h"
 
 #include "project_defines.h"
 
@@ -38,7 +39,7 @@ void setup()
   screen_goto_MainPage();
 
   distance_init();
-
+  temphumi_init();
   // sensor
   // distance_init();
   // humidity_init();
@@ -58,12 +59,23 @@ void loop()
   digitalWrite(13, 0);
   delay(100);
 
+  bool reading_success = false;
+  // DISTANCE
   int mm = 0;
-  bool reading_success = distance_get_LeftMiddle(&mm);
+  reading_success = distance_get_LeftMiddle(&mm);
   if (reading_success)
   {
-    screen_print_DistanceLeftMiddle((float)mm);
+    screen_print_DistanceLeftMiddle(mm / 10.0);
     Serial.println(mm);
+  }
+
+  // TEMPERATURE - HUMIDITY
+  float temperature, humidity = 0.0;
+  reading_success = temphumi_get_reading(&temperature, &humidity);
+  if (reading_success)
+  {
+    screen_print_EnvironmentTemperature(temperature);
+    screen_print_EnvironmentHumidity(humidity);
   }
   delay(1000);
   /*
