@@ -1,132 +1,90 @@
 #include "Arduino.h"
-#include <micro_ros_platformio.h>
-#include "std_msgs/msg/string.h"
-
-// #include <stdio.h>
-#include <rcl/rcl.h>
-// #include <rcl/error_handling.h>
-#include <rclc/rclc.h>
-#include <rclc/executor.h>
-#include <geometry_msgs/msg/twist.h>
-
-rcl_allocator_t allocator;
-rclc_support_t support;
-rcl_node_t node;
-
-// Subscriptor 01
-rcl_subscription_t subscriber_01;
-std_msgs__msg__String input1;
-rclc_executor_t executor_sub_01;
-
-// Subscriptor 02
-rcl_subscription_t subscriber_02;
-std_msgs__msg__String input2;
-rclc_executor_t executor_sub_02;
-
-// Publicador 01
-rcl_publisher_t publisher_01;
-std_msgs__msg__String msg_mcu;
-rclc_executor_t executor_pub_01;
-rcl_timer_t timer_01;
-
-bool suscription_01_data_r = false;
-bool suscription_02_data_r = false;
-
-void subscription_01_callback(const void *msgin)
-{
-  suscription_01_data_r = true;
-  // Serial.println(F("subscription_01_callback"));
-}
-
-void subscription_02_callback(const void *msgin)
-{
-  suscription_02_data_r = true;
-
-  // Serial.println(F("subscription_02_callback"));
-}
-
-void timer_01_callback(rcl_timer_t *timer, int64_t last_call_time)
-{
-  RCLC_UNUSED(last_call_time);
-  if (timer != NULL)
-  {
-    msg_mcu.data.data = "hola mundo";
-    msg_mcu.data.size = 11;
-    rcl_publish(&publisher_01, &msg_mcu, NULL);
-  }
-}
+#include "app/load/load.h"
+#include "project_defines.h"
 
 void setup()
 {
-  Serial3.begin(115200);
+  Serial3.begin(9600);
   Serial3.println(F("prueba"));
-  pinMode(13, OUTPUT);
-  digitalWrite(13, 1);
-  delay(1000);
-  digitalWrite(13, 0);
-  Serial.begin(115200);
-  set_microros_serial_transports(Serial);
 
-  while (Serial.dtr() == 0)
-  {
+  load_init();
+  load_toogling_led();
+
+  analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
+  analogWriteResolution(8);
+  analogWrite(DRIVER_5_SV_PIN, 0);
+
+  /*
+    pinMode(13, OUTPUT);
     digitalWrite(13, 1);
     delay(1000);
     digitalWrite(13, 0);
-    delay(1000);
-  }
+    Serial.begin(115200);
+    set_microros_serial_transports(Serial);
 
-  allocator = rcl_get_default_allocator();
+    while (Serial.dtr() == 0)
+    {
+      digitalWrite(13, 1);
+      delay(1000);
+      digitalWrite(13, 0);
+      delay(1000);
+    }
 
-  // create init_options
-  rclc_support_init(&support, 0, NULL, &allocator);
+    allocator = rcl_get_default_allocator();
 
-  // create node
-  rclc_node_init_default(&node, "micro_ros_arduino_node", "", &support);
+    // create init_options
+    rclc_support_init(&support, 0, NULL, &allocator);
 
-  rclc_subscription_init_default(
-      &subscriber_01,
-      &node,
-      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
-      "/locomotion");
+    // create node
+    rclc_node_init_default(&node, "micro_ros_arduino_node", "", &support);
 
-  // msg hace referencia al tipo de mensaje y no al monbre del mensaje
+    rclc_subscription_init_default(
+        &subscriber_01,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
+        "/locomotion");
 
-  // create subscriber_02
+    // msg hace referencia al tipo de mensaje y no al monbre del mensaje
 
-  rclc_subscription_init_default(
-      &subscriber_02,
-      &node,
-      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
-      "/tower");
+    // create subscriber_02
 
-  // Creador publicador
-  rclc_publisher_init_default(
-      &publisher_01,
-      &node,
-      ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
-      "/mcu");
+    rclc_subscription_init_default(
+        &subscriber_02,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
+        "/tower");
 
-  // create timer, called every 1000 ms to publish heartbeat
-  const unsigned int timer_01_timeout = 1000;
-  rclc_timer_init_default(
-      &timer_01,
-      &support,
-      RCL_MS_TO_NS(timer_01_timeout),
-      timer_01_callback);
+    // Creador publicador
+    rclc_publisher_init_default(
+        &publisher_01,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
+        "/mcu");
 
-  // create executor
-  rclc_executor_init(&executor_sub_01, &support.context, 1, &allocator);
-  rclc_executor_add_subscription(&executor_sub_01, &subscriber_01, &input1, &subscription_01_callback, ON_NEW_DATA);
+    // create timer, called every 1000 ms to publish heartbeat
+    const unsigned int timer_01_timeout = 1000;
+    rclc_timer_init_default(
+        &timer_01,
+        &support,
+        RCL_MS_TO_NS(timer_01_timeout),
+        timer_01_callback);
 
-  rclc_executor_init(&executor_sub_02, &support.context, 1, &allocator);
-  rclc_executor_add_subscription(&executor_sub_02, &subscriber_02, &input2, &subscription_02_callback, ON_NEW_DATA);
+    // create executor
+    rclc_executor_init(&executor_sub_01, &support.context, 1, &allocator);
+    rclc_executor_add_subscription(&executor_sub_01, &subscriber_01, &input1, &subscription_01_callback, ON_NEW_DATA);
 
-  rclc_executor_init(&executor_pub_01, &support.context, 1, &allocator);
-  // rclc_executor_add_timer(&executor_pub_01, &timer_01);
+    rclc_executor_init(&executor_sub_02, &support.context, 1, &allocator);
+    rclc_executor_add_subscription(&executor_sub_02, &subscriber_02, &input2, &subscription_02_callback, ON_NEW_DATA);
+
+    rclc_executor_init(&executor_pub_01, &support.context, 1, &allocator);
+    // rclc_executor_add_timer(&executor_pub_01, &timer_01);
+
+    */
 }
 
 void loop()
 {
+  /*
   rmw_uros_ping_agent(100, 3);
   rclc_executor_spin_some(&executor_sub_01, RCL_MS_TO_NS(100));
   rclc_executor_spin_some(&executor_sub_02, RCL_MS_TO_NS(100));
@@ -152,11 +110,22 @@ void loop()
     delay(100);
     digitalWrite(13, 0);
   }
+*/
+  // Serial3.println(F("1234567890"));
+  // delay(100);
 
-  delay(100);
+  for (int duty = 0; duty < 256; duty += 25)
+  {
+    analogWrite(DRIVER_5_SV_PIN, duty);
+    delay(1000);
+  }
+
+  for (int duty = 255; duty > 0; duty -= 25)
+  {
+    analogWrite(DRIVER_5_SV_PIN, duty);
+    delay(1000);
+  }
 }
-
-
 
 /*
 #include <Arduino.h>
@@ -229,4 +198,3 @@ void loop()
 
 }
 */
-
