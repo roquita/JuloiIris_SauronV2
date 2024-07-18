@@ -1,18 +1,38 @@
 #include "Arduino.h"
+#include "app/interval/interval.h"
 #include "app/load/load.h"
+#include "app/ros/ros.h"
 #include "project_defines.h"
+
+#include "driver/DEBUG/debug.h"
+
+void suscriber01_cb()
+{
+}
+void suscriber02_cb()
+{
+}
+void publisher01_cb()
+{
+}
+void publisher02_cb()
+{
+}
 
 void setup()
 {
-  Serial3.begin(9600);
-  Serial3.println(F("prueba"));
+  DEBUG_INIT();
+  DEBUG_PRINTLN(F("prueba"));
 
+  interval_init();
   load_init();
   load_toogling_led();
 
   analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
   analogWriteResolution(8);
   analogWrite(DRIVER_5_SV_PIN, 0);
+
+  // ros_init(suscriber01_cb, suscriber02_cb, publisher01_cb, publisher02_cb);
 
   /*
     pinMode(13, OUTPUT);
@@ -84,6 +104,33 @@ void setup()
 
 void loop()
 {
+  for (int duty = 0; duty < 256; duty += 25)
+  {
+    analogWrite(DRIVER_5_SV_PIN, duty);
+    delay(1000);
+  }
+
+  for (int duty = 255; duty > 0; duty -= 25)
+  {
+    analogWrite(DRIVER_5_SV_PIN, duty);
+    delay(1000);
+  }
+  // ros_loop();
+
+  /*
+    if (interval_500ms_triggered)
+    {
+    }
+
+    if (interval_2000ms_triggered)
+    {
+    }
+
+    if (interval_5000ms_triggered)
+    {
+    }
+  */
+
   /*
   rmw_uros_ping_agent(100, 3);
   rclc_executor_spin_some(&executor_sub_01, RCL_MS_TO_NS(100));
@@ -110,91 +157,90 @@ void loop()
     delay(100);
     digitalWrite(13, 0);
   }
-*/
+  */
   // Serial3.println(F("1234567890"));
   // delay(100);
 
-  for (int duty = 0; duty < 256; duty += 25)
+  /*
+
+  }
+  */
+
+  /*
+  #include <Arduino.h>
+  #include "app/load/load.h"
+  #include "app/screen/screen.h"
+  #include "app/sensor/distance.h"
+  #include "app/sensor/temphumi.h"
+
+  #include "project_defines.h"
+
+  #include "DFRobot_QMC5883.h"
+
+  DFRobot_QMC5883 compass(&Wire2, 0x0D);
+
+  void setup()
   {
-    analogWrite(DRIVER_5_SV_PIN, duty);
+    Serial.begin(115200);
+
+    screen_init();
+    screen_goto_MainPage();
+
+    distance_init();
+    temphumi_init();
+    load_init();
+    load_toogling_led();
+
+    while (!compass.begin())
+    {
+      Serial.println("Could not find a valid 5883 sensor, check wiring!");
+      delay(500);
+    }
+    if (compass.isQMC())
+    {
+      Serial.println("Initialize QMC5883");
+       compass.setRange(QMC5883_RANGE_8GA);
+       Serial.print("compass range is:");
+       Serial.println(compass.getRange());
+
+       compass.setMeasurementMode(QMC5883_CONTINOUS);
+       Serial.print("compass measurement mode is:");
+       Serial.println(compass.getMeasurementMode());
+
+       compass.setDataRate(QMC5883_DATARATE_10HZ);
+       Serial.print("compass data rate is:");
+       Serial.println(compass.getDataRate());
+
+       compass.setSamples(QMC5883_SAMPLES_8);
+       Serial.print("compass samples is:");
+       Serial.println(compass.getSamples());
+    }
+  }
+  // int i = 0;
+
+  void loop()
+  {
+
+    //float declinationAngle = (4.0 + (26.0 / 60.0)) / (180 / PI);
+    //compass.setDeclinationAngle(declinationAngle);
+    sVector_t mag = compass.readRaw();
+    //compass.getHeadingDegrees();
+    Serial.print("X:");
+    Serial.print(mag.XAxis);
+    Serial.print(" Y:");
+    Serial.print(mag.YAxis);
+    Serial.print(" Z:");
+    Serial.println(mag.ZAxis);
+   // Serial.print("Degress = ");
+    //Serial.println(mag.HeadingDegress);
     delay(1000);
-  }
 
-  for (int duty = 255; duty > 0; duty -= 25)
-  {
-    analogWrite(DRIVER_5_SV_PIN, duty);
-    delay(1000);
   }
+  */
+
+  /*
+    analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
+    analogWriteResolution(8);
+    analogWrite(DRIVER_5_SV_PIN, 0);
+  */
 }
-
-/*
-#include <Arduino.h>
-#include "app/load/load.h"
-#include "app/screen/screen.h"
-#include "app/sensor/distance.h"
-#include "app/sensor/temphumi.h"
-
-#include "project_defines.h"
-
-#include "DFRobot_QMC5883.h"
-
-DFRobot_QMC5883 compass(&Wire2, 0x0D);
-
-void setup()
-{
-  Serial.begin(115200);
-
-  screen_init();
-  screen_goto_MainPage();
-
-  distance_init();
-  temphumi_init();
-  load_init();
-  load_toogling_led();
-
-  while (!compass.begin())
-  {
-    Serial.println("Could not find a valid 5883 sensor, check wiring!");
-    delay(500);
-  }
-  if (compass.isQMC())
-  {
-    Serial.println("Initialize QMC5883");
-     compass.setRange(QMC5883_RANGE_8GA);
-     Serial.print("compass range is:");
-     Serial.println(compass.getRange());
-
-     compass.setMeasurementMode(QMC5883_CONTINOUS);
-     Serial.print("compass measurement mode is:");
-     Serial.println(compass.getMeasurementMode());
-
-     compass.setDataRate(QMC5883_DATARATE_10HZ);
-     Serial.print("compass data rate is:");
-     Serial.println(compass.getDataRate());
-
-     compass.setSamples(QMC5883_SAMPLES_8);
-     Serial.print("compass samples is:");
-     Serial.println(compass.getSamples());
-  }
-}
-// int i = 0;
-
-void loop()
-{
-
-  //float declinationAngle = (4.0 + (26.0 / 60.0)) / (180 / PI);
-  //compass.setDeclinationAngle(declinationAngle);
-  sVector_t mag = compass.readRaw();
-  //compass.getHeadingDegrees();
-  Serial.print("X:");
-  Serial.print(mag.XAxis);
-  Serial.print(" Y:");
-  Serial.print(mag.YAxis);
-  Serial.print(" Z:");
-  Serial.println(mag.ZAxis);
- // Serial.print("Degress = ");
-  //Serial.println(mag.HeadingDegress);
-  delay(1000);
-
-}
-*/

@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "quaternion__struct.h": "c",
+        "header__struct.h": "c",
+        "header__type_support.h": "c"
+    }
+}
