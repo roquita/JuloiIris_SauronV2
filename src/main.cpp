@@ -28,12 +28,12 @@ void setup()
   load_init();
   load_toogling_led();
 
-  analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
-  analogWriteResolution(8);
-  analogWrite(DRIVER_5_SV_PIN, 0);
+  //analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
+  //analogWriteResolution(8);
+  //analogWrite(DRIVER_5_SV_PIN, 0);
 
-  // ros_init(suscriber01_cb, suscriber02_cb, publisher01_cb, publisher02_cb);
-
+   ros_init(suscriber01_cb, suscriber02_cb, publisher01_cb, publisher02_cb);
+  load_TurnOn_led();
   /*
     pinMode(13, OUTPUT);
     digitalWrite(13, 1);
@@ -104,6 +104,7 @@ void setup()
 
 void loop()
 {
+  /*
   for (int duty = 0; duty < 256; duty += 25)
   {
     analogWrite(DRIVER_5_SV_PIN, duty);
@@ -115,7 +116,8 @@ void loop()
     analogWrite(DRIVER_5_SV_PIN, duty);
     delay(1000);
   }
-  // ros_loop();
+  */
+  ros_loop();
 
   /*
     if (interval_500ms_triggered)
