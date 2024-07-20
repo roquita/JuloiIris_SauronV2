@@ -28,11 +28,11 @@ void setup()
   load_init();
   load_toogling_led();
 
-  //analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
-  //analogWriteResolution(8);
-  //analogWrite(DRIVER_5_SV_PIN, 0);
+  // analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
+  // analogWriteResolution(8);
+  // analogWrite(DRIVER_5_SV_PIN, 0);
 
-   ros_init(suscriber01_cb, suscriber02_cb, publisher01_cb, publisher02_cb);
+  ros_init(suscriber01_cb, suscriber02_cb, publisher01_cb, publisher02_cb);
   load_TurnOn_led();
   /*
     pinMode(13, OUTPUT);
@@ -119,19 +119,21 @@ void loop()
   */
   ros_loop();
 
-  /*
-    if (interval_500ms_triggered)
-    {
-    }
+  if (interval_100ms_triggered())
+  {
+  }
 
-    if (interval_2000ms_triggered)
-    {
-    }
+  if (interval_500ms_triggered())
+  {
+  }
 
-    if (interval_5000ms_triggered)
-    {
-    }
-  */
+  if (interval_2000ms_triggered())
+  {
+  }
+
+  if (interval_5000ms_triggered())
+  {
+  }
 
   /*
   rmw_uros_ping_agent(100, 3);

@@ -3,6 +3,9 @@
         "quaternion__struct.h": "c",
         "header__struct.h": "c",
         "header__type_support.h": "c",
-        "vector": "cpp"
+        "vector": "cpp",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     }
 }
