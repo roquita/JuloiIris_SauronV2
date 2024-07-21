@@ -2,108 +2,168 @@
 #include "app/interval/interval.h"
 #include "app/load/load.h"
 #include "app/ros/ros.h"
+#include "app/sensor/distance.h"
+#include "app/sensor/temphumi.h"
+#include "app/screen/screen.h"
 #include "project_defines.h"
 
+#include "driver/UART_MUX/uart_mux.h"
 #include "driver/DEBUG/debug.h"
+#include "driver/XKC-KL200/xkc_kl200.h"
 
-void suscriber01_cb()
+void SUB_Locomotion_app_cb(int direction, int velocity)
 {
+  // TODO: cambiar cinematica de motores
 }
-void suscriber02_cb()
+void SUB_MaxVelocity_app_cb(uint32_t MaxVelocity)
 {
+  // TODO: Guardar nueva maxima velocidad
 }
-void publisher01_cb()
+void SUB_Tower_app_cb(int method, int value)
 {
+  // TODO: Mover torre
 }
-void publisher02_cb()
+void SUB_ErrorJetson_app_cb(uint32_t ErrorCode)
 {
+  if (ErrorCode == 1) // no internet
+  {
+    load_Toogling_1s_5s_PilotRed();
+    screen_queue_NoInternet_Notification();
+  }
+  else
+  {
+    DEBUG_PRINT(F("ERROR JETSON UNKNOWN CODE: "));
+    DEBUG_PRINTLN(ErrorCode);
+  }
+}
+bool PUB_Sensor_app_cb(char *buffer, int *size)
+{
+
+  int bytes = snprintf(buffer, *size, "{"
+                                      "\"dis\":[%5i %5i %5i %5i %5i %5i %5i %5i %5i],"
+                                      "\"vel\":%3i,"
+                                      "\"inc\":%3i,"
+                                      "\"ori\":%3i,"
+                                      "\"tem\":%3i,"
+                                      "\"hum\":%3i"
+                                      "}",
+                       1, 2, 3, 4, 5, 6, 7, 8, 9, 50, 37, 29, 25, 74);
+  bool parsing_success = (bytes > 0) || (bytes < (*size));
+  if (!parsing_success)
+  {
+    DEBUG_PRINTLN(F("PUB_Sensor_app_cb parsing"));
+    return false;
+  }
+
+  return true;
+}
+bool PUB_AlertSauron_app_cb(char *buffer, int *size)
+{
+
+  int bytes = snprintf(buffer, *size, "{"
+                                      "\"dis\":[%1i %1i %1i %1i %1i],"
+                                      "\"inc\":%1i,"
+                                      "\"lsi\":%1i,"
+                                      "\"lsf\":%1i"
+                                      "}",
+                       0, 0, 3, 1, 0, 0, 0, 0);
+  bool parsing_success = (bytes > 0) || (bytes < (*size));
+  if (!parsing_success)
+  {
+    DEBUG_PRINTLN(F("PUB_AlertSauron_app_cb parsing"));
+    return false;
+  }
+
+  return true;
 }
 
 void setup()
 {
-  DEBUG_INIT();
-  DEBUG_PRINTLN(F("prueba"));
+  Serial.begin(115200);
+  //DEBUG_INIT();
+  Serial3.begin(9600);
+  //DEBUG_PRINTLN(F("SETUP IN"));
+ // DEBUG_PRINT(F("\x62\x34\x09\xff\xff\x00\x01\x00\x5f"));
+  Serial3.write(0x62);
+  Serial3.write(0x34);
+  Serial3.write(0x09);
+  Serial3.write(0xff);
+  Serial3.write(0xff);
+  Serial3.write(0x00);
+  Serial3.write(0x01);
+  Serial3.write(0x00);
+  Serial3.write(0x5f);
+  delay(1000);
+  //DEBUG_PRINT(F("\x62\x30\x09\xff\xff\x00\x00\x00\x5b"));
+  Serial3.write(0x62);
+  Serial3.write(0x30);
+  Serial3.write(0x09);
+  Serial3.write(0xff);
+  Serial3.write(0xff);
+  Serial3.write(0x00);
+  Serial3.write(0x00);
+  Serial3.write(0x00);
+  Serial3.write(0x5b);
 
-  interval_init();
-  load_init();
-  load_toogling_led();
+  // screen_init();
+  // interval_init();
+  // load_init();
+  // distance_init();
+  // temphumi_init();
 
-  // analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
-  // analogWriteResolution(8);
-  // analogWrite(DRIVER_5_SV_PIN, 0);
+  // ros_init(SUB_Locomotion_app_cb, SUB_MaxVelocity_app_cb, SUB_Tower_app_cb, SUB_ErrorJetson_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
 
-  ros_init(suscriber01_cb, suscriber02_cb, publisher01_cb, publisher02_cb);
-  load_TurnOn_led();
-  /*
-    pinMode(13, OUTPUT);
-    digitalWrite(13, 1);
-    delay(1000);
-    digitalWrite(13, 0);
-    Serial.begin(115200);
-    set_microros_serial_transports(Serial);
+  UARTMUX_init();
+  UARTMUX_select_channel(MUX_CHANNEL_14);
 
-    while (Serial.dtr() == 0)
-    {
-      digitalWrite(13, 1);
-      delay(1000);
-      digitalWrite(13, 0);
-      delay(1000);
-    }
-
-    allocator = rcl_get_default_allocator();
-
-    // create init_options
-    rclc_support_init(&support, 0, NULL, &allocator);
-
-    // create node
-    rclc_node_init_default(&node, "micro_ros_arduino_node", "", &support);
-
-    rclc_subscription_init_default(
-        &subscriber_01,
-        &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
-        "/locomotion");
-
-    // msg hace referencia al tipo de mensaje y no al monbre del mensaje
-
-    // create subscriber_02
-
-    rclc_subscription_init_default(
-        &subscriber_02,
-        &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
-        "/tower");
-
-    // Creador publicador
-    rclc_publisher_init_default(
-        &publisher_01,
-        &node,
-        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
-        "/mcu");
-
-    // create timer, called every 1000 ms to publish heartbeat
-    const unsigned int timer_01_timeout = 1000;
-    rclc_timer_init_default(
-        &timer_01,
-        &support,
-        RCL_MS_TO_NS(timer_01_timeout),
-        timer_01_callback);
-
-    // create executor
-    rclc_executor_init(&executor_sub_01, &support.context, 1, &allocator);
-    rclc_executor_add_subscription(&executor_sub_01, &subscriber_01, &input1, &subscription_01_callback, ON_NEW_DATA);
-
-    rclc_executor_init(&executor_sub_02, &support.context, 1, &allocator);
-    rclc_executor_add_subscription(&executor_sub_02, &subscriber_02, &input2, &subscription_02_callback, ON_NEW_DATA);
-
-    rclc_executor_init(&executor_pub_01, &support.context, 1, &allocator);
-    // rclc_executor_add_timer(&executor_pub_01, &timer_01);
-
-    */
+ // DEBUG_PRINTLN(F("SETUP OUT"));
 }
 
 void loop()
 {
+  int data = 0;
+  xkc_kl200_get_data(&data);
+  Serial.println(data);
+  delay(1000);
+  /*
+    if (interval_100ms_triggered())
+    {
+      ros_loop();
+    }
+
+    if (interval_500ms_triggered())
+    {
+    }
+    */
+  /*
+    if (interval_1000ms_triggered())
+    {
+      distance_update();
+      temphumi_update();
+
+      screen_print_DistanceFront(distance_get_Front() / 10.0);
+      screen_print_DistanceRightFront(distance_get_RightFront() / 10.0);
+      screen_print_DistanceRightMiddle(distance_get_RightMiddle() / 10.0);
+      screen_print_DistanceRightBack(distance_get_RightBack() / 10.0);
+      screen_print_DistanceLeftFront(distance_get_LeftFront() / 10.0);
+      screen_print_DistanceLeftMiddle(distance_get_LeftMiddle() / 10.0);
+      screen_print_DistanceLeftBack(distance_get_LeftBack() / 10.0);
+      screen_print_DistanceBackRight(distance_get_BackRight() / 10.0);
+      screen_print_DistanceBackLeft(distance_get_BackLeft() / 10.0);
+
+      screen_print_BatteryLevel(50.0);
+      screen_print_EnvironmentTemperature(temphumi_get_temperature());
+      screen_print_EnvironmentHumidity(temphumi_get_humidity());
+    }
+  */
+  if (interval_2000ms_triggered())
+  {
+  }
+
+  if (interval_5000ms_triggered())
+  {
+  }
+
   /*
   for (int duty = 0; duty < 256; duty += 25)
   {
@@ -117,23 +177,6 @@ void loop()
     delay(1000);
   }
   */
-  ros_loop();
-
-  if (interval_100ms_triggered())
-  {
-  }
-
-  if (interval_500ms_triggered())
-  {
-  }
-
-  if (interval_2000ms_triggered())
-  {
-  }
-
-  if (interval_5000ms_triggered())
-  {
-  }
 
   /*
   rmw_uros_ping_agent(100, 3);
@@ -246,5 +289,9 @@ void loop()
     analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
     analogWriteResolution(8);
     analogWrite(DRIVER_5_SV_PIN, 0);
+
+      // analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
+  // analogWriteResolution(8);
+  // analogWrite(DRIVER_5_SV_PIN, 0);
   */
 }

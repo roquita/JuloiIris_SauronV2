@@ -5,16 +5,54 @@
 
 static IntervalTimer timer;
 
-load_status_t circulin_status = LOAD_STATUS_OFF;
-load_status_t pilot1_status = LOAD_STATUS_OFF;
-load_status_t pilot2_status = LOAD_STATUS_OFF;
-load_status_t led_status = LOAD_STATUS_OFF;
+load_status_t _circulin_status = LOAD_STATUS_OFF;
+load_status_t _PilotRed_status = LOAD_STATUS_OFF;
+load_status_t _PilotYellow_status = LOAD_STATUS_OFF;
+load_status_t _led_status = LOAD_STATUS_OFF;
 
-// int counter = 0;
+int _circulin_counter = 0;
+int _PilotRed_counter = 0;
+int _PilotYellow_counter = 0;
+int _led_counter = 0;
+
+int _circulin_pulses = 0;
+int _PilotRed_pulses = 0;
+int _PilotYellow_pulses = 0;
+int _led_pulses = 0;
+
+void digitalToogle_xs_5s(int pin, int x, int *pcounter, int *ppulses)
+{
+    int counter = *pcounter;
+    int pulses = *ppulses;
+
+    counter++;
+
+    if ((digitalRead(pin) == HIGH) && (counter >= 2))
+    {
+        digitalWrite(pin, LOW);
+        counter = 0;
+        pulses++;
+    }
+    if ((pulses >= x) && (digitalRead(pin) == LOW) && (counter >= 10))
+    {
+        digitalWrite(pin, HIGH);
+        counter = 0;
+        pulses = 0;
+    }
+    if ((pulses < x) && (digitalRead(pin) == LOW) && (counter >= 2))
+    {
+        digitalWrite(pin, HIGH);
+        counter = 0;
+    }
+
+    *pcounter = counter;
+    *ppulses = pulses;
+}
+
 void timer_cb()
 {
     // circulin
-    switch (circulin_status)
+    switch (_circulin_status)
     {
     case LOAD_STATUS_ON:
         digitalWrite(RELAY_1_PIN, 1);
@@ -30,8 +68,8 @@ void timer_cb()
         break;
     }
 
-    // pilot 1
-    switch (pilot1_status)
+    // pilot Red
+    switch (_PilotRed_status)
     {
     case LOAD_STATUS_ON:
         digitalWrite(RELAY_3_PIN, 1);
@@ -39,13 +77,16 @@ void timer_cb()
     case LOAD_STATUS_OFF:
         digitalWrite(RELAY_3_PIN, 0);
         break;
-    default:
+    case LOAD_STATUS_TOOGLING:
         digitalToggle(RELAY_3_PIN);
+        break;
+    default:
+        digitalToogle_xs_5s(RELAY_3_PIN, 1, &_PilotRed_counter, &_PilotRed_pulses);
         break;
     }
 
-    // pilot 2
-    switch (pilot2_status)
+    // pilot Yellow
+    switch (_PilotYellow_status)
     {
     case LOAD_STATUS_ON:
         digitalWrite(RELAY_4_PIN, 1);
@@ -59,7 +100,7 @@ void timer_cb()
     }
 
     // led
-    switch (led_status)
+    switch (_led_status)
     {
     case LOAD_STATUS_ON:
         digitalWrite(BUILTIN_LED_PIN, 1);
@@ -92,50 +133,54 @@ void load_init()
 }
 void load_TurnOn_circulin()
 {
-    circulin_status = LOAD_STATUS_ON;
+    _circulin_status = LOAD_STATUS_ON;
 }
 void load_TurnOff_circulin()
 {
-    circulin_status = LOAD_STATUS_OFF;
+    _circulin_status = LOAD_STATUS_OFF;
 }
 void load_toogling_circulin()
 {
-    circulin_status = LOAD_STATUS_TOOGLING;
+    _circulin_status = LOAD_STATUS_TOOGLING;
 }
-void load_TurnOn_pilot1()
+void load_TurnOn_pilotRed()
 {
-    pilot1_status = LOAD_STATUS_ON;
+    _PilotRed_status = LOAD_STATUS_ON;
 }
-void load_TurnOff_pilot1()
+void load_TurnOff_PilotRed()
 {
-    pilot1_status = LOAD_STATUS_OFF;
+    _PilotRed_status = LOAD_STATUS_OFF;
 }
-void load_toogling_pilot1()
+void load_toogling_PilotRed()
 {
-    pilot1_status = LOAD_STATUS_TOOGLING;
+    _PilotRed_status = LOAD_STATUS_TOOGLING;
 }
-void load_TurnOn_pilot2()
+void load_Toogling_1s_5s_PilotRed()
 {
-    pilot2_status = LOAD_STATUS_ON;
+    _PilotRed_status = LOAD_STATUS_TOOGLING_1s_5s;
 }
-void load_TurnOff_pilot2()
+void load_TurnOn_PilotYellow()
 {
-    pilot2_status = LOAD_STATUS_OFF;
+    _PilotYellow_status = LOAD_STATUS_ON;
 }
-void load_toogling_pilot2()
+void load_TurnOff_PilotYellow()
 {
-    pilot2_status = LOAD_STATUS_TOOGLING;
+    _PilotYellow_status = LOAD_STATUS_OFF;
+}
+void load_toogling_PilotYellow()
+{
+    _PilotYellow_status = LOAD_STATUS_TOOGLING;
 }
 
 void load_TurnOn_led()
 {
-    led_status = LOAD_STATUS_ON;
+    _led_status = LOAD_STATUS_ON;
 }
 void load_TurnOff_led()
 {
-    led_status = LOAD_STATUS_OFF;
+    _led_status = LOAD_STATUS_OFF;
 }
 void load_toogling_led()
 {
-    led_status = LOAD_STATUS_TOOGLING;
+    _led_status = LOAD_STATUS_TOOGLING;
 }

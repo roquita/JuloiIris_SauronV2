@@ -55,6 +55,8 @@ void screen_init()
     screen_print_Notification4();
     screen_print_Notification5();
     screen_print_Notification6();
+
+    screen_goto_MainPage();
 }
 void screen_print_DistanceFront(float cm)
 {
@@ -372,6 +374,14 @@ void screen_queue_Notification(screen_notification_t *notification)
 
     memcpy(&notification1, notification, sizeof(screen_notification_t));
     screen_print_Notification1();
+}
+void screen_queue_NoInternet_Notification()
+{
+    screen_notification_t notification;
+    notification.color = SCREEN_COLOR_RED;
+    notification.content = "No Internet";
+    notification.footer = "Fallo !!";
+    screen_queue_Notification(&notification);
 }
 void screen_goto_MainPage()
 {

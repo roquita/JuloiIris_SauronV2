@@ -8,10 +8,10 @@
 typedef struct
 {
     int color;
-    char content[10];
+    char* content;
     char* footer;
 } screen_notification_t;
-
+    //char content[10];
 typedef enum
 {
     SCREEN_PAGE_LOADING = 1,
@@ -40,6 +40,8 @@ void screen_print_Notification4();
 void screen_print_Notification5();
 void screen_print_Notification6();
 void screen_queue_Notification(screen_notification_t *notification);
+
+void screen_queue_NoInternet_Notification();
 
 void screen_goto_MainPage();
 void screen_goto_LoadingPage();

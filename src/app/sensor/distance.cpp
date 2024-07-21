@@ -18,66 +18,66 @@ void distance_init()
 }
 void distance_update()
 {
-    xkc_kl200_select(XKC_KL200_DEVICE_1);
+    xkc_kl200_select(XKC_KL200_DEVICE_6);
     xkc_kl200_get_data(&Front_mm);
 
-    xkc_kl200_select(XKC_KL200_DEVICE_2);
+    xkc_kl200_select(XKC_KL200_DEVICE_9);
     xkc_kl200_get_data(&RightFront_mm);
 
-    xkc_kl200_select(XKC_KL200_DEVICE_3);
+    xkc_kl200_select(XKC_KL200_DEVICE_8);
     xkc_kl200_get_data(&RightMiddle_mm);
 
-    xkc_kl200_select(XKC_KL200_DEVICE_4);
+    xkc_kl200_select(XKC_KL200_DEVICE_7);
     xkc_kl200_get_data(&RightBack_mm);
 
-    xkc_kl200_select(XKC_KL200_DEVICE_5);
+    xkc_kl200_select(XKC_KL200_DEVICE_1);
     xkc_kl200_get_data(&LeftFront_mm);
 
-    xkc_kl200_select(XKC_KL200_DEVICE_6);
+    xkc_kl200_select(XKC_KL200_DEVICE_2);
     xkc_kl200_get_data(&LeftMiddle_mm);
 
-    xkc_kl200_select(XKC_KL200_DEVICE_7);
+    xkc_kl200_select(XKC_KL200_DEVICE_3);
     xkc_kl200_get_data(&LeftBack_mm);
 
-    xkc_kl200_select(XKC_KL200_DEVICE_8);
+    xkc_kl200_select(XKC_KL200_DEVICE_4);
     xkc_kl200_get_data(&BackRight_mm);
 
-    xkc_kl200_select(XKC_KL200_DEVICE_9);
+    xkc_kl200_select(XKC_KL200_DEVICE_5);
     xkc_kl200_get_data(&BackLeft_mm);
 }
-int distance_get_Front(int *mm)
+int distance_get_Front()
 {
     return Front_mm;
 }
-int distance_get_RightFront(int *mm)
+int distance_get_RightFront()
 {
     return RightFront_mm;
 }
-int distance_get_RightMiddle(int *mm)
+int distance_get_RightMiddle()
 {
     return RightMiddle_mm;
 }
-int distance_get_RightBack(int *mm)
+int distance_get_RightBack()
 {
     return RightBack_mm;
 }
-int distance_get_LeftFront(int *mm)
+int distance_get_LeftFront()
 {
     return LeftFront_mm;
 }
-int distance_get_LeftMiddle(int *mm)
+int distance_get_LeftMiddle()
 {
     return LeftMiddle_mm;
 }
-int distance_get_LeftBack(int *mm)
+int distance_get_LeftBack()
 {
     return LeftBack_mm;
 }
-int distance_get_BackRight(int *mm)
+int distance_get_BackRight()
 {
     return BackRight_mm;
 }
-int distance_get_BackLeft(int *mm)
+int distance_get_BackLeft()
 {
     return BackLeft_mm;
 }
