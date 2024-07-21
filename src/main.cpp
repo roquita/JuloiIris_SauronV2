@@ -11,44 +11,77 @@
 #include "driver/DEBUG/debug.h"
 #include "driver/XKC-KL200/xkc_kl200.h"
 
-void SUB_Locomotion_app_cb(int direction, int velocity)
+void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
 {
-  // TODO: cambiar cinematica de motores
-}
-void SUB_MaxVelocity_app_cb(uint32_t MaxVelocity)
-{
-  // TODO: Guardar nueva maxima velocidad
-}
-void SUB_Tower_app_cb(int method, int value)
-{
-  // TODO: Mover torre
-}
-void SUB_ErrorJetson_app_cb(uint32_t ErrorCode)
-{
-  if (ErrorCode == 1) // no internet
+  switch (type)
   {
-    load_Toogling_1s_5s_PilotRed();
-    screen_queue_NoInternet_Notification();
+  case 0: // LOCOMOTION
+  {
+    DEBUG_PRINTLN(F("SUB_MsgToSauron_app_cb LOCOMOTION"));
+    int direction = (int)param1;
+    float velocity = param2;
+    DEBUG_PRINT(F("Direccion: "));
+    DEBUG_PRINTLN(direction);
+    DEBUG_PRINT(F("Rapidez: "));
+    DEBUG_PRINTLN(velocity);
   }
-  else
+  break;
+  case 1: // MAX VELOCITY
   {
-    DEBUG_PRINT(F("ERROR JETSON UNKNOWN CODE: "));
+    DEBUG_PRINTLN(F("SUB_MsgToSauron_app_cb MAX VELOCITY"));
+    int MaxVelocity = (int)param1;
+    DEBUG_PRINT(F("Velocidad maxima(%): "));
+    DEBUG_PRINTLN(MaxVelocity);
+  }
+  break;
+  case 2: // TOWER
+  {
+    DEBUG_PRINTLN(F("SUB_MsgToSauron_app_cb TOWER"));
+    int method = (int)param1;
+    int value = (int)param2;
+    DEBUG_PRINT(F("Metodo: "));
+    DEBUG_PRINTLN(method);
+    DEBUG_PRINT(F("Valor: "));
+    DEBUG_PRINTLN(value);
+  }
+  break;
+  case 3: // ALERT JETSON
+  {
+    DEBUG_PRINTLN(F("SUB_MsgToSauron_app_cb ALERT JETSON"));
+    int ErrorCode = (int)param1;
+    DEBUG_PRINT(F("Error Jetson code: "));
     DEBUG_PRINTLN(ErrorCode);
+
+    if (ErrorCode == 1) // no internet
+    {
+      load_Toogling_1s_5s_PilotRed();
+      screen_queue_NoInternet_Notification();
+    }
+  }
+  break;
+
+  default: // UNKNOWN
+    DEBUG_PRINT(F("SUB_MsgToSauron_app_cb: unknown type "));
+    DEBUG_PRINT(type);
+    break;
   }
 }
+
 bool PUB_Sensor_app_cb(char *buffer, int *size)
 {
+  //DEBUG_PRINTLN(F("PUB_Sensor_app_cb"));
 
-  int bytes = snprintf(buffer, *size, "{"
-                                      "\"dis\":[%5i %5i %5i %5i %5i %5i %5i %5i %5i],"
-                                      "\"vel\":%3i,"
-                                      "\"inc\":%3i,"
-                                      "\"ori\":%3i,"
-                                      "\"tem\":%3i,"
-                                      "\"hum\":%3i"
-                                      "}",
+  int bytes = snprintf(buffer, *size, "\"{"
+                                      "'dis':[%i,%i,%i,%i,%i,%i,%i,%i,%i],"
+                                      "'vel':%i,"
+                                      "'inc':%i,"
+                                      "'ori':%i,"
+                                      "'tem':%i,"
+                                      "'hum':%i"
+                                      "}\"",
                        1, 2, 3, 4, 5, 6, 7, 8, 9, 50, 37, 29, 25, 74);
   bool parsing_success = (bytes > 0) || (bytes < (*size));
+  *size = bytes + 1;
   if (!parsing_success)
   {
     DEBUG_PRINTLN(F("PUB_Sensor_app_cb parsing"));
@@ -59,15 +92,17 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
 }
 bool PUB_AlertSauron_app_cb(char *buffer, int *size)
 {
+  //DEBUG_PRINTLN(F("PUB_AlertSauron_app_cb"));
 
-  int bytes = snprintf(buffer, *size, "{"
-                                      "\"dis\":[%1i %1i %1i %1i %1i],"
-                                      "\"inc\":%1i,"
-                                      "\"lsi\":%1i,"
-                                      "\"lsf\":%1i"
-                                      "}",
+  int bytes = snprintf(buffer, *size, "\"{"
+                                      "'dis':[%1i,%1i,%1i,%1i,%1i],"
+                                      "'inc':%1i,"
+                                      "'lsi':%1i,"
+                                      "'lsf':%1i"
+                                      "\"}",
                        0, 0, 3, 1, 0, 0, 0, 0);
   bool parsing_success = (bytes > 0) || (bytes < (*size));
+  *size = bytes + 1;
   if (!parsing_success)
   {
     DEBUG_PRINTLN(F("PUB_AlertSauron_app_cb parsing"));
@@ -79,31 +114,8 @@ bool PUB_AlertSauron_app_cb(char *buffer, int *size)
 
 void setup()
 {
-  Serial.begin(115200);
-  //DEBUG_INIT();
-  Serial3.begin(9600);
-  //DEBUG_PRINTLN(F("SETUP IN"));
- // DEBUG_PRINT(F("\x62\x34\x09\xff\xff\x00\x01\x00\x5f"));
-  Serial3.write(0x62);
-  Serial3.write(0x34);
-  Serial3.write(0x09);
-  Serial3.write(0xff);
-  Serial3.write(0xff);
-  Serial3.write(0x00);
-  Serial3.write(0x01);
-  Serial3.write(0x00);
-  Serial3.write(0x5f);
-  delay(1000);
-  //DEBUG_PRINT(F("\x62\x30\x09\xff\xff\x00\x00\x00\x5b"));
-  Serial3.write(0x62);
-  Serial3.write(0x30);
-  Serial3.write(0x09);
-  Serial3.write(0xff);
-  Serial3.write(0xff);
-  Serial3.write(0x00);
-  Serial3.write(0x00);
-  Serial3.write(0x00);
-  Serial3.write(0x5b);
+  DEBUG_INIT();
+  DEBUG_PRINTLN(F("SETUP IN"));
 
   // screen_init();
   // interval_init();
@@ -111,30 +123,23 @@ void setup()
   // distance_init();
   // temphumi_init();
 
-  // ros_init(SUB_Locomotion_app_cb, SUB_MaxVelocity_app_cb, SUB_Tower_app_cb, SUB_ErrorJetson_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
+  ros_init(SUB_MsgToSauron_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
 
-  UARTMUX_init();
-  UARTMUX_select_channel(MUX_CHANNEL_14);
-
- // DEBUG_PRINTLN(F("SETUP OUT"));
+  DEBUG_PRINTLN(F("SETUP OUT"));
 }
 
 void loop()
 {
-  int data = 0;
-  xkc_kl200_get_data(&data);
-  Serial.println(data);
-  delay(1000);
-  /*
-    if (interval_100ms_triggered())
-    {
-      ros_loop();
-    }
 
-    if (interval_500ms_triggered())
-    {
-    }
-    */
+  if (interval_100ms_triggered())
+  {
+    ros_loop();
+  }
+
+  if (interval_500ms_triggered())
+  {
+  }
+
   /*
     if (interval_1000ms_triggered())
     {

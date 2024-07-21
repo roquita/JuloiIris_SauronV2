@@ -19,29 +19,11 @@ rcl_allocator_t _allocator;
 rclc_support_t _support;
 rcl_node_t _node;
 
-// Subscriptor Locomotion
-rcl_subscription_t _sLocomotion;
-geometry_msgs__msg__Twist _mLocomotion;
-rclc_executor_t _eLocomotion;
-Locomotion_app_cb_t _Locomotion_app_cb = NULL;
-
-// Subscirption Velocidad maxima
-rcl_subscription_t _sMaxVelocity;
-std_msgs__msg__UInt32 _mMaxVelocity;
-rclc_executor_t _eMaxVelocity;
-MaxVelocity_app_cb_t _MaxVelocity_app_cb = NULL;
-
-// Subscriptor Tower
-rcl_subscription_t _sTower;
-geometry_msgs__msg__Twist _mTower;
-rclc_executor_t _eTower;
-Tower_app_cb_t _Tower_app_cb = NULL;
-
-// Subscriptor ErrorsJetson
-rcl_subscription_t _sErrorJetson;
-std_msgs__msg__UInt32 _mErrorJetson;
-rclc_executor_t _eErrorJetson;
-ErrorJetson_app_cb_t _ErrorJetson_app_cb = NULL;
+// Subscriptor MsgToSauron
+rcl_subscription_t _sMsgToSauron;
+geometry_msgs__msg__Twist _mMsgToSauron;
+rclc_executor_t _eMsgToSauron;
+MsgToSauron_app_cb_t _MsgToSauron_app_cb = NULL;
 
 // Publisher Sensors
 rcl_publisher_t _pSensor;
@@ -57,68 +39,18 @@ rclc_executor_t _eAlertSauron;
 rcl_timer_t _tAlertSauron;
 AlertSauron_app_cb_t _AlertSauron_app_cb = NULL;
 
-void SUB_Locomotion_cb(const void *msgin)
+void SUB_MsgToSauron_cb(const void *msgin)
 {
-    DEBUG_PRINTLN(F("SUB_Locomotion_cb"));
 
-    const geometry_msgs__msg__Twist *mLocomotion = (const geometry_msgs__msg__Twist *)msgin;
-    DEBUG_PRINT(F("Direccion: "));
-    DEBUG_PRINTLN(mLocomotion->linear.x);
-    DEBUG_PRINT(F("Rapidez: "));
-    DEBUG_PRINTLN(mLocomotion->linear.y);
+    const geometry_msgs__msg__Twist *mMsgToSauron = (const geometry_msgs__msg__Twist *)msgin;
 
-    int direction = (int)mLocomotion->linear.x;
-    int velocity = (int)mLocomotion->linear.y;
+    int type = (int)mMsgToSauron->linear.z;
+    float param1 = (float)mMsgToSauron->linear.x;
+    float param2 = (float)mMsgToSauron->linear.y;
 
-    if (_Locomotion_app_cb)
+    if (_MsgToSauron_app_cb)
     {
-        _Locomotion_app_cb(direction, velocity);
-    }
-}
-void SUB_MaxVelocity_cb(const void *msgin)
-{
-    DEBUG_PRINTLN(F("SUB_MaxVelocity_cb"));
-
-    const std_msgs__msg__UInt32 *mMaxVelocity = (const std_msgs__msg__UInt32 *)msgin;
-    DEBUG_PRINT(F("Velocidad maxima(%): "));
-    DEBUG_PRINTLN(mMaxVelocity->data);
-
-    if (_MaxVelocity_app_cb)
-    {
-        _MaxVelocity_app_cb(mMaxVelocity->data);
-    }
-}
-void SUB_Tower_cb(const void *msgin)
-{
-    DEBUG_PRINTLN(F("SUB_Tower_cb"));
-
-    const geometry_msgs__msg__Twist *mTower = (const geometry_msgs__msg__Twist *)msgin;
-    DEBUG_PRINT(F("Metodo: "));
-    DEBUG_PRINTLN(mTower->linear.x);
-    DEBUG_PRINT(F("Valor: "));
-    DEBUG_PRINTLN(mTower->linear.y);
-
-    int method = (int)mTower->linear.x;
-    int value = (int)mTower->linear.y;
-
-    if (_Tower_app_cb)
-    {
-        _Tower_app_cb(method, value);
-    }
-}
-void SUB_ErrorJetson_cb(const void *msgin)
-{
-    DEBUG_PRINTLN(F("SUB_ErrorJetson_cb"));
-
-    const std_msgs__msg__UInt32 *mErrorsJetson = (const std_msgs__msg__UInt32 *)msgin;
-    DEBUG_PRINT(F("Error Jetson code: "));
-    DEBUG_PRINTLN(mErrorsJetson->data);
-
-    uint32_t ErrorCode = (uint32_t)mErrorsJetson->data;
-
-    if (_ErrorJetson_app_cb)
-    {
-        _ErrorJetson_app_cb(ErrorCode);
+        _MsgToSauron_app_cb(type, param1, param2);
     }
 }
 void PUB_Sensor_cb(rcl_timer_t *timer, int64_t last_call_time)
@@ -142,12 +74,16 @@ void PUB_Sensor_cb(rcl_timer_t *timer, int64_t last_call_time)
         }
 
         _mSensor.data.data = buffer;
-        _mSensor.data.capacity = size + 1;
-        bool publish_success = rcl_publish(&_pSensor, buffer, NULL) == RCL_RET_OK;
+        _mSensor.data.capacity = size;
+        bool publish_success = rcl_publish(&_pSensor, &_mSensor, NULL) == RCL_RET_OK;
         if (!publish_success)
         {
             DEBUG_PRINTLN(F("PUB_Sensor_cb publish"));
         }
+    }
+    else
+    {
+        DEBUG_PRINTLN(F("PUB_Sensor_cb timer null"));
     }
 }
 void PUB_AlertSauron_cb(rcl_timer_t *timer, int64_t last_call_time)
@@ -171,27 +107,25 @@ void PUB_AlertSauron_cb(rcl_timer_t *timer, int64_t last_call_time)
         }
 
         _mAlertSauron.data.data = buffer;
-        _mAlertSauron.data.capacity = size + 1;
-        bool publish_success = rcl_publish(&_pAlertSauron, buffer, NULL) == RCL_RET_OK;
+        _mAlertSauron.data.capacity = size;
+        bool publish_success = rcl_publish(&_pAlertSauron, &_mAlertSauron, NULL) == RCL_RET_OK;
         if (!publish_success)
         {
             DEBUG_PRINTLN(F("PUB_AlertSauron_cb publish"));
         }
     }
+    else
+    {
+        DEBUG_PRINTLN(F("PUB_AlertSauron_cb timer null"));
+    }
 }
 
-void ros_init(Locomotion_app_cb_t Locomotion_app_cb,
-              MaxVelocity_app_cb_t MaxVelocity_app_cb,
-              Tower_app_cb_t Tower_app_cb,
-              ErrorJetson_app_cb_t ErrorJetson_app_cb,
+void ros_init(MsgToSauron_app_cb_t MsgToSauron_app_cb,
               Sensor_app_cb_t Sensor_app_cb,
               AlertSauron_app_cb_t AlertSauron_app_cb)
 {
     // set app callbacks
-    _Locomotion_app_cb = Locomotion_app_cb;
-    _MaxVelocity_app_cb = MaxVelocity_app_cb;
-    _Tower_app_cb = Tower_app_cb;
-    _ErrorJetson_app_cb = ErrorJetson_app_cb;
+    _MsgToSauron_app_cb = MsgToSauron_app_cb;
     _Sensor_app_cb = Sensor_app_cb;
     _AlertSauron_app_cb = AlertSauron_app_cb;
 
@@ -211,30 +145,19 @@ void ros_init(Locomotion_app_cb_t Locomotion_app_cb,
     rclc_node_init_default(&_node, "micro_ros_arduino_node", "", &_support);
 
     // subscriptions
-    rclc_subscription_init_default(&_sLocomotion, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist), "/tensey/locomotion");
-    rclc_subscription_init_default(&_sMaxVelocity, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, UInt32), "/tensey/velocity");
-    rclc_subscription_init_default(&_sTower, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist), "/tensey/tower");
-    rclc_subscription_init_default(&_sErrorJetson, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, UInt32), "/tensey/errorjetson");
+    rclc_subscription_init_default(&_sMsgToSauron, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist), "/tensey/msg");
 
     // publishers-timers
-    rclc_publisher_init_default(&_pSensor, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String), "/sensor");
+    rclc_publisher_init_default(&_pSensor, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String), "/tensey/sensor");
     rclc_timer_init_default(&_tSensor, &_support, RCL_MS_TO_NS(1000), PUB_Sensor_cb);
 
-    rclc_publisher_init_default(&_pAlertSauron, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String), "/alertsauron");
+    rclc_publisher_init_default(&_pAlertSauron, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String), "/tensey/alert");
     rclc_timer_init_default(&_tAlertSauron, &_support, RCL_MS_TO_NS(1000), PUB_AlertSauron_cb);
 
     // executors
-    rclc_executor_init(&_eLocomotion, &_support.context, 1, &_allocator);
-    rclc_executor_add_subscription(&_eLocomotion, &_sLocomotion, &_mLocomotion, &SUB_Locomotion_cb, ON_NEW_DATA);
 
-    rclc_executor_init(&_eMaxVelocity, &_support.context, 1, &_allocator);
-    rclc_executor_add_subscription(&_eMaxVelocity, &_sMaxVelocity, &_mMaxVelocity, &SUB_MaxVelocity_cb, ON_NEW_DATA);
-
-    rclc_executor_init(&_eTower, &_support.context, 1, &_allocator);
-    rclc_executor_add_subscription(&_eTower, &_sTower, &_mTower, &SUB_Tower_cb, ON_NEW_DATA);
-
-    rclc_executor_init(&_eErrorJetson, &_support.context, 1, &_allocator);
-    rclc_executor_add_subscription(&_eErrorJetson, &_sErrorJetson, &_mErrorJetson, &SUB_ErrorJetson_cb, ON_NEW_DATA);
+    rclc_executor_init(&_eMsgToSauron, &_support.context, 1, &_allocator);
+    rclc_executor_add_subscription(&_eMsgToSauron, &_sMsgToSauron, &_mMsgToSauron, &SUB_MsgToSauron_cb, ON_NEW_DATA);
 
     rclc_executor_init(&_eSensor, &_support.context, 1, &_allocator);
     rclc_executor_add_timer(&_eSensor, &_tSensor);
@@ -246,14 +169,23 @@ void ros_loop()
 {
     if (rmw_uros_ping_agent(100, 3) != RMW_RET_OK)
     {
+        rclc_executor_fini(&_eMsgToSauron);
+        rclc_executor_fini(&_eSensor);
+        rclc_executor_fini(&_eAlertSauron);
+
+        rcl_publisher_fini(&_pSensor, &_node);
+        rcl_publisher_fini(&_pAlertSauron, &_node);
+        rcl_subscription_fini(&_sMsgToSauron, &_node);
+
+        rcl_node_fini(&_node);
+
+        DEBUG_PRINTLN(F("REBOOTING: PING FAILED."));
+        delay(1000);
         SCB_AIRCR = 0x05FA0004;
     }
     else
     {
-        rclc_executor_spin_some(&_eLocomotion, RCL_MS_TO_NS(100));
-        rclc_executor_spin_some(&_eMaxVelocity, RCL_MS_TO_NS(100));
-        rclc_executor_spin_some(&_eTower, RCL_MS_TO_NS(100));
-        rclc_executor_spin_some(&_eErrorJetson, RCL_MS_TO_NS(100));
+        rclc_executor_spin_some(&_eMsgToSauron, RCL_MS_TO_NS(100));
         rclc_executor_spin_some(&_eSensor, RCL_MS_TO_NS(100));
         rclc_executor_spin_some(&_eAlertSauron, RCL_MS_TO_NS(100));
     }
