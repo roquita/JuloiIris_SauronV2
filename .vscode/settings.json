@@ -11,6 +11,17 @@
         "initializer_list": "cpp",
         "regex": "cpp",
         "utility": "cpp",
-        "node.h": "c"
+        "node.h": "c",
+        "*.tcc": "cpp",
+        "ratio": "cpp",
+        "system_error": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "deque": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp"
     }
 }

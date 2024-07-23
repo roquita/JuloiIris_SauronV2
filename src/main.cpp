@@ -5,11 +5,14 @@
 #include "app/sensor/distance.h"
 #include "app/sensor/temphumi.h"
 #include "app/screen/screen.h"
+#include "app/wheel/wheel.h"
+#include "app/ptz/ptz.h"
 #include "project_defines.h"
 
 #include "driver/UART_MUX/uart_mux.h"
 #include "driver/DEBUG/debug.h"
 #include "driver/XKC-KL200/xkc_kl200.h"
+#include "driver/BLD_300B/bld_300b.h"
 
 void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
 {
@@ -24,6 +27,34 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     DEBUG_PRINTLN(direction);
     DEBUG_PRINT(F("Rapidez: "));
     DEBUG_PRINTLN(velocity);
+
+    bool valid_direction = (direction >= 0 && direction <= 4);
+    bool valid_velocity = (velocity >= 0.0 && velocity <= 1.0);
+    bool valid_params = valid_direction && valid_velocity;
+    if (!valid_params)
+    {
+      DEBUG_PRINTLN(F("LOCOMOTION invalid params"));
+      break;
+    }
+
+    switch (direction)
+    {
+    case 0: // PARAR
+      wheel_stop();
+      break;
+    case 1: // ADELANTE
+      wheel_move_forward(velocity);
+      break;
+    case 2: // ATRAS
+      wheel_move_backward(velocity);
+      break;
+    case 3: // GIRAR DERECHA
+      wheel_turn_right(velocity);
+      break;
+    default: // GIRAR IZQUIERDA
+      wheel_turn_left(velocity);
+      break;
+    }
   }
   break;
   case 1: // MAX VELOCITY
@@ -32,6 +63,16 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     int MaxVelocity = (int)param1;
     DEBUG_PRINT(F("Velocidad maxima(%): "));
     DEBUG_PRINTLN(MaxVelocity);
+
+    bool valid_MaxVelocity = (MaxVelocity >= 0 && MaxVelocity <= 100);
+    bool valid_params = valid_MaxVelocity;
+    if (!valid_params)
+    {
+      DEBUG_PRINTLN(F("MAX VELOCITY invalid params"));
+      break;
+    }
+
+    wheel_set_MaxSpeed(MaxVelocity);
   }
   break;
   case 2: // TOWER
@@ -43,6 +84,29 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     DEBUG_PRINTLN(method);
     DEBUG_PRINT(F("Valor: "));
     DEBUG_PRINTLN(value);
+
+    bool valid_method_by_pulse = (method == 1 && (value == 1 || value == -1));
+    bool valid_method_by_limit = (method == 2 && (value == 1 || value == -1));
+    bool valid_mehotd_by_pos = (method == 3 && (value >= 0 && value <= 100));
+    bool valid_params = valid_method_by_pulse || valid_method_by_limit || valid_mehotd_by_pos;
+    if (!valid_params)
+    {
+      DEBUG_PRINTLN(F("TOWER invalid params"));
+      break;
+    }
+
+    switch (method)
+    {
+    case 1: // BY PULSE
+      value == 1 ? ptz_MoveUp_by_pulse() : ptz_MoveDown_by_pulse();
+      break;
+    case 2: // BY LIMIT
+      value == 1 ? ptz_MoveUp_by_limit() : ptz_MoveDown_by_limit();
+      break;
+    default: // BY POSITION
+      ptz_move_by_position(value);
+      break;
+    }
   }
   break;
   case 3: // ALERT JETSON
@@ -69,8 +133,6 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
 
 bool PUB_Sensor_app_cb(char *buffer, int *size)
 {
-  //DEBUG_PRINTLN(F("PUB_Sensor_app_cb"));
-
   int bytes = snprintf(buffer, *size, "\"{"
                                       "'dis':[%i,%i,%i,%i,%i,%i,%i,%i,%i],"
                                       "'vel':%i,"
@@ -92,7 +154,7 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
 }
 bool PUB_AlertSauron_app_cb(char *buffer, int *size)
 {
-  //DEBUG_PRINTLN(F("PUB_AlertSauron_app_cb"));
+  // DEBUG_PRINTLN(F("PUB_AlertSauron_app_cb"));
 
   int bytes = snprintf(buffer, *size, "\"{"
                                       "'dis':[%1i,%1i,%1i,%1i,%1i],"
@@ -114,6 +176,7 @@ bool PUB_AlertSauron_app_cb(char *buffer, int *size)
 
 void setup()
 {
+  // delay(10000);
   DEBUG_INIT();
   DEBUG_PRINTLN(F("SETUP IN"));
 
@@ -122,8 +185,18 @@ void setup()
   // load_init();
   // distance_init();
   // temphumi_init();
+   wheel_init();
 
-  ros_init(SUB_MsgToSauron_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
+  /*
+    analogWriteResolution(8);
+    pinMode(DRIVER_5_FR_PIN, OUTPUT);
+    digitalWrite(DRIVER_5_FR_PIN, 0);
+
+    analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
+    analogWrite(DRIVER_5_SV_PIN, 128); // 0=100% - 255=0%
+    */
+
+  // ros_init(SUB_MsgToSauron_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
 
   DEBUG_PRINTLN(F("SETUP OUT"));
 }
@@ -133,7 +206,7 @@ void loop()
 
   if (interval_100ms_triggered())
   {
-    ros_loop();
+    // ros_loop();
   }
 
   if (interval_500ms_triggered())
@@ -168,50 +241,6 @@ void loop()
   if (interval_5000ms_triggered())
   {
   }
-
-  /*
-  for (int duty = 0; duty < 256; duty += 25)
-  {
-    analogWrite(DRIVER_5_SV_PIN, duty);
-    delay(1000);
-  }
-
-  for (int duty = 255; duty > 0; duty -= 25)
-  {
-    analogWrite(DRIVER_5_SV_PIN, duty);
-    delay(1000);
-  }
-  */
-
-  /*
-  rmw_uros_ping_agent(100, 3);
-  rclc_executor_spin_some(&executor_sub_01, RCL_MS_TO_NS(100));
-  rclc_executor_spin_some(&executor_sub_02, RCL_MS_TO_NS(100));
-  rclc_executor_spin_some(&executor_pub_01, RCL_MS_TO_NS(100));
-
-  if (suscription_01_data_r)
-  {
-    suscription_01_data_r = false;
-    Serial3.println(F("holaaaaa"));
-
-    msg_mcu.data.data = "gaaaaa";
-    msg_mcu.data.size = 7;
-    rcl_publish(&publisher_01, &msg_mcu, NULL);
-  }
-  if (suscription_02_data_r)
-  {
-    suscription_02_data_r = false;
-    digitalWrite(13, 1);
-    delay(100);
-    digitalWrite(13, 0);
-    delay(100);
-    digitalWrite(13, 1);
-    delay(100);
-    digitalWrite(13, 0);
-  }
-  */
-  // Serial3.println(F("1234567890"));
-  // delay(100);
 
   /*
 
@@ -288,15 +317,5 @@ void loop()
     delay(1000);
 
   }
-  */
-
-  /*
-    analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
-    analogWriteResolution(8);
-    analogWrite(DRIVER_5_SV_PIN, 0);
-
-      // analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
-  // analogWriteResolution(8);
-  // analogWrite(DRIVER_5_SV_PIN, 0);
   */
 }
