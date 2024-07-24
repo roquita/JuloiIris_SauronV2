@@ -18,12 +18,12 @@ typedef enum
 #define PTZ_MOVE_UP()                                              \
     {                                                              \
         BLD300B_driver1_set_direction(BLD300B_DIRECTION_REVERSED); \
-        BLD300B_driver1_set_duty(100);                             \
+        BLD300B_driver1_set_duty(50);                              \
     }
 #define PTZ_MOVE_DOWN()                                           \
     {                                                             \
         BLD300B_driver1_set_direction(BLD300B_DIRECTION_FORWARD); \
-        BLD300B_driver1_set_duty(100);                            \
+        BLD300B_driver1_set_duty(50);                             \
     }
 #define PTZ_STOP()                   \
     {                                \
@@ -80,14 +80,20 @@ void timer_position_cb()
 }
 void upper_LimitSwitch_cb()
 {
+    DEBUG_PRINTLN(F("upper_LimitSwitch_cb"));
+    _timer_pulse.end();
     _target_position = -1;
+
     _ptz_position = 100;
     _ptz_direction = PTZ_DIR_STOPPED;
     PTZ_STOP();
 }
 void lower_LimitSwitch_cb()
 {
+    DEBUG_PRINTLN(F("lower_LimitSwitch_cb"));
+    _timer_pulse.end();
     _target_position = -1;
+
     _ptz_position = 0;
     _ptz_direction = PTZ_DIR_STOPPED;
     PTZ_STOP();
@@ -102,18 +108,26 @@ void ptz_init()
     // MOVE TO LOWER POSITION
     if (LOWER_LIMIT_SWITCH_IS_TRIGGERED())
     {
+        PTZ_STOP()
         _ptz_direction = PTZ_DIR_STOPPED;
-        _target_position = -1;
     }
     else
     {
         PTZ_MOVE_DOWN();
         _ptz_direction = PTZ_DIR_MOVING_DOWN;
-        _target_position = 0;
     }
 
     // TIMER POSITION 100ms
     _timer_position.begin(timer_position_cb, 100 * 1000UL);
+
+    // wait until lower limit switch gets triggered
+    while (!LOWER_LIMIT_SWITCH_IS_TRIGGERED())
+    {
+        DEBUG_PRINTLN(F("PTZ ..."));
+        delay(1000);
+    }
+
+    DEBUG_PRINTLN(F("PTZ INIT DONE"));
 }
 void ptz_MoveUp_by_pulse()
 {
@@ -128,7 +142,7 @@ void ptz_MoveUp_by_pulse()
 
     PTZ_MOVE_UP();
     _ptz_direction = PTZ_DIR_MOVING_UP;
-    _timer_pulse.begin(timer_pulse_cb, 500000UL);
+    _timer_pulse.begin(timer_pulse_cb, 2000 * 1000UL);
 }
 void ptz_MoveDown_by_pulse()
 {
@@ -143,7 +157,7 @@ void ptz_MoveDown_by_pulse()
 
     PTZ_MOVE_DOWN();
     _ptz_direction = PTZ_DIR_MOVING_DOWN;
-    _timer_pulse.begin(timer_pulse_cb, 500000UL);
+    _timer_pulse.begin(timer_pulse_cb, 2000 * 1000UL);
 }
 void ptz_MoveUp_by_limit()
 {
@@ -201,4 +215,15 @@ void ptz_move_by_position(int target_position) // 0-100%
         _ptz_direction = PTZ_DIR_MOVING_DOWN;
         _target_position = target_position;
     }
+}
+void ptz_stop()
+{
+    PTZ_STOP();
+    _ptz_direction = PTZ_DIR_STOPPED;
+    _timer_pulse.end();
+    _target_position = -1;
+}
+int ptz_get_position()
+{
+    return _ptz_position;
 }

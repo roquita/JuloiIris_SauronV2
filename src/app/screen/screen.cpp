@@ -383,6 +383,22 @@ void screen_queue_NoInternet_Notification()
     notification.footer = "Fallo !!";
     screen_queue_Notification(&notification);
 }
+void screen_queue_YesInternet_Notificacion()
+{
+    screen_notification_t notification;
+    notification.color = SCREEN_COLOR_GREEN;
+    notification.content = "Internet Ready";
+    notification.footer = "Exitoso !!";
+    screen_queue_Notification(&notification);
+}
+void screen_queue_LowBatery_Notificacion()
+{
+    screen_notification_t notification;
+    notification.color = SCREEN_COLOR_YELLOW;
+    notification.content = "Bateria baja";
+    notification.footer = "Aviso !!";
+    screen_queue_Notification(&notification);
+}
 void screen_goto_MainPage()
 {
     nextion_select();

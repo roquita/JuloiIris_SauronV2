@@ -42,6 +42,8 @@ void screen_print_Notification6();
 void screen_queue_Notification(screen_notification_t *notification);
 
 void screen_queue_NoInternet_Notification();
+void screen_queue_YesInternet_Notificacion();
+void screen_queue_LowBatery_Notificacion();
 
 void screen_goto_MainPage();
 void screen_goto_LoadingPage();

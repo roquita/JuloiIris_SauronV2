@@ -1,0 +1,63 @@
+/***************************** SUSCRIPCIONES ********************************************/
+// TOPICO "/tensey/msg", twist
+	linear z = 0 => LOCOMOTION
+		linear x = 0 => parar
+		linear x =  1  => adelante
+		linear x = 2 => atras
+		linear x = 3 => girar a derecha
+		linear x = 4 => girar a izquierda
+		linear y [0.0:1.0]  => rapidez
+
+	linear z = 1 => VELOCITY
+		linear x =  [0-100%]
+
+	linear z = 2 => TOWER
+		linear x = 1 => avanzar por pulsos
+		linear x = 2 => avanzar por limite
+		linear x = 3 => avanzar por posicion
+		linear y = (si x =1) -1 o +1
+		linear y = (si x =2) -1 o +1
+		linear y = (si x= 3)  [0-100%]
+
+	linear z = 3 => ALERT 
+		linear x = 1 => no internet. Bloquear locomocion y parar. Piloto rojo parpadeo cada 1s-5s.
+				Notificacion nextion en rojo.
+		linear x = 2 => si internet.
+                Notificacion nextion en verde
+		linear x = 3 => bateria baja. 
+				Notificacion nextion en amarillo.
+		
+	linear z = 4 => LOAD
+		linear x = 0 => apagar luces
+		linear x = 1 => encender luces
+/***************************** PUBLICADORES ********************************************/
+// TOPICO "/tensey/sensor", timer 1s, string
+ 
+	 {						
+	 "dis":[1,2,3,4,5,6,7,8,9],    // distancia 1-9 (cm)(int)
+	 "vel":[1,2,3,4,5],		       // motor: Front Right,Front Left, Back Right, Back Left, Ptz  (0-100%)(int)
+	 "inc":24,				       // inclinacion  (grados)(int)
+	 "ori":15,				       // orientacion  (grados)(int)
+	 "tem":25,				       // temperatura  (celsius)(int)
+	 "hum":78,				       // humedad (%HR)(int)  
+	 "uls":0,				       // limit switch superior (1=activado  0=desactivado)(int)
+	 "lls":1,				       // limit switch inferior (1=activado  0=desactivado)(int)
+	}
+
+// TOPICO "/tensey/alert", evento, entero
+// drivers[1-8], inclinacion peligrosa,  final de carrera inicial estado, final de carrera final estado
+
+	 {						
+	 "dis":[1,0,1,1,0,1,1,1,1],                    // distancia 1-9: 0=NoAlerta  1=SiAlerta           (int)
+	 "mot":[2,0,0,0,1],		               // motor : Front Right,Front Left, Back Right, Back Left, Ptz  (int)
+	 							0=NoAlerta 2=OverVoltage 3=PowerTubeOverCurrent
+	 							4=OverCurrent 5=UnderVoltage 6=Hall 7=Locked  
+	 "inc":1,				       // inclinacion:  0=NoAlerta 1=SiAlerta   (int)
+	 "tem":0,				       // temperatura: 0=NoAlerta 1=SiAlerta    (int)
+	 "hum":1,				       // humedad: 0=NoAlerta 1=SiAlerta        (int)
+	 "uls":0,				       // limit switch superior: 0=NoAlerta 1=SiAlerta   (int)
+	 "lls":1,				       // limit switch inferior: 0=NoAlerta 1=SiAlerta   (int)
+	}
+
+
+

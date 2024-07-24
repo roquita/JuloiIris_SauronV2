@@ -184,3 +184,10 @@ void load_toogling_led()
 {
     _led_status = LOAD_STATUS_TOOGLING;
 }
+
+void load_TurnOn_light()
+{
+}
+void load_TurnOff_light()
+{
+}

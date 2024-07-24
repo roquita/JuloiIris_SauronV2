@@ -1,4 +1,0 @@
-driver2 => motor front left 
-driver3 => motor front right
-driver4 => motor back left
-driver5 => motor back right

@@ -26,3 +26,8 @@ void load_toogling_PilotYellow();
 void load_TurnOn_led();
 void load_TurnOff_led();
 void load_toogling_led();
+
+void load_TurnOn_light();
+void load_TurnOff_light();
+
+

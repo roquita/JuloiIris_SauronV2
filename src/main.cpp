@@ -20,7 +20,7 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
   {
   case 0: // LOCOMOTION
   {
-    DEBUG_PRINTLN(F("SUB_MsgToSauron_app_cb LOCOMOTION"));
+    DEBUG_PRINTLN(F("LOCOMOTION"));
     int direction = (int)param1;
     float velocity = param2;
     DEBUG_PRINT(F("Direccion: "));
@@ -59,7 +59,7 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
   break;
   case 1: // MAX VELOCITY
   {
-    DEBUG_PRINTLN(F("SUB_MsgToSauron_app_cb MAX VELOCITY"));
+    DEBUG_PRINTLN(F("MAX VELOCITY"));
     int MaxVelocity = (int)param1;
     DEBUG_PRINT(F("Velocidad maxima(%): "));
     DEBUG_PRINTLN(MaxVelocity);
@@ -77,7 +77,7 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
   break;
   case 2: // TOWER
   {
-    DEBUG_PRINTLN(F("SUB_MsgToSauron_app_cb TOWER"));
+    DEBUG_PRINTLN(F("TOWER"));
     int method = (int)param1;
     int value = (int)param2;
     DEBUG_PRINT(F("Metodo: "));
@@ -109,21 +109,64 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     }
   }
   break;
-  case 3: // ALERT JETSON
+  case 3: // ALERT
   {
-    DEBUG_PRINTLN(F("SUB_MsgToSauron_app_cb ALERT JETSON"));
+    DEBUG_PRINTLN(F("ALERT"));
     int ErrorCode = (int)param1;
-    DEBUG_PRINT(F("Error Jetson code: "));
+    DEBUG_PRINT(F("code: "));
     DEBUG_PRINTLN(ErrorCode);
 
-    if (ErrorCode == 1) // no internet
+    bool valid_ErrorCode = (ErrorCode >= 1 && ErrorCode <= 3);
+    bool valid_params = valid_ErrorCode;
+    if (!valid_params)
     {
+      DEBUG_PRINTLN(F("ALERT invalid params"));
+      break;
+    }
+
+    switch (ErrorCode)
+    {
+    case 1: // NO INTERNET
+      wheel_stop();
+      ptz_stop();
       load_Toogling_1s_5s_PilotRed();
       screen_queue_NoInternet_Notification();
+      break;
+    case 2: // SI INTERNET
+      screen_queue_YesInternet_Notificacion();
+      break;
+    default: // BATERIA BAJA
+      screen_queue_LowBatery_Notificacion();
+      break;
     }
   }
   break;
+  case 4: // LOAD
+  {
+    DEBUG_PRINTLN(F("LOAD"));
+    int LoadCode = (int)param1;
+    DEBUG_PRINT(F("code: "));
+    DEBUG_PRINTLN(LoadCode);
 
+    bool valid_LoadCode = (LoadCode >= 0 && LoadCode <= 1);
+    bool valid_params = valid_LoadCode;
+    if (!valid_params)
+    {
+      DEBUG_PRINTLN(F("LOAD invalid params"));
+      break;
+    }
+
+    switch (LoadCode)
+    {
+    case 0: //  APAGAR LUCES
+      load_TurnOff_light();
+      break;
+    default: // ENCENDER LUCES
+      load_TurnOn_light();
+      break;
+    }
+  }
+  break;
   default: // UNKNOWN
     DEBUG_PRINT(F("SUB_MsgToSauron_app_cb: unknown type "));
     DEBUG_PRINT(type);
@@ -135,13 +178,15 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
 {
   int bytes = snprintf(buffer, *size, "\"{"
                                       "'dis':[%i,%i,%i,%i,%i,%i,%i,%i,%i],"
-                                      "'vel':%i,"
+                                      "'vel':[%i,%i,%i,%i,%i],"
                                       "'inc':%i,"
                                       "'ori':%i,"
                                       "'tem':%i,"
-                                      "'hum':%i"
+                                      "'hum':%i,"
+                                      "'uls':%i,"
+                                      "'lls':%i"
                                       "}\"",
-                       1, 2, 3, 4, 5, 6, 7, 8, 9, 50, 37, 29, 25, 74);
+                       1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 24, 15, 25, 78, 0, 1);
   bool parsing_success = (bytes > 0) || (bytes < (*size));
   *size = bytes + 1;
   if (!parsing_success)
@@ -157,12 +202,15 @@ bool PUB_AlertSauron_app_cb(char *buffer, int *size)
   // DEBUG_PRINTLN(F("PUB_AlertSauron_app_cb"));
 
   int bytes = snprintf(buffer, *size, "\"{"
-                                      "'dis':[%1i,%1i,%1i,%1i,%1i],"
-                                      "'inc':%1i,"
-                                      "'lsi':%1i,"
-                                      "'lsf':%1i"
-                                      "\"}",
-                       0, 0, 3, 1, 0, 0, 0, 0);
+                                      "'dis':[%i,%i,%i,%i,%i,%i,%i,%i,%i],"
+                                      "'mot':[%i,%i,%i,%i,%i],"
+                                      "'inc':%i,"
+                                      "'tem':%i,"
+                                      "'hum':%i,"
+                                      "'uls':%i,"
+                                      "'lls':%i"
+                                      "}\"",
+                       1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1);
   bool parsing_success = (bytes > 0) || (bytes < (*size));
   *size = bytes + 1;
   if (!parsing_success)
@@ -176,7 +224,6 @@ bool PUB_AlertSauron_app_cb(char *buffer, int *size)
 
 void setup()
 {
-  // delay(10000);
   DEBUG_INIT();
   DEBUG_PRINTLN(F("SETUP IN"));
 
@@ -185,24 +232,31 @@ void setup()
   // load_init();
   // distance_init();
   // temphumi_init();
-   wheel_init();
-
-  /*
-    analogWriteResolution(8);
-    pinMode(DRIVER_5_FR_PIN, OUTPUT);
-    digitalWrite(DRIVER_5_FR_PIN, 0);
-
-    analogWriteFrequency(DRIVER_5_SV_PIN, 2000.0);
-    analogWrite(DRIVER_5_SV_PIN, 128); // 0=100% - 255=0%
-    */
+  // wheel_init();
+  ptz_init();
 
   // ros_init(SUB_MsgToSauron_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
 
   DEBUG_PRINTLN(F("SETUP OUT"));
 }
+int target_position = -1;
+bool number_received()
+{
+  DEBUG_GET_NUM(&target_position);
+
+  if (target_position == -1)
+    return false;
+  else
+    return true;
+}
 
 void loop()
 {
+  if (number_received())
+  {
+    ptz_move_by_position(target_position);
+    target_position = -1;
+  }
 
   if (interval_100ms_triggered())
   {
@@ -211,6 +265,7 @@ void loop()
 
   if (interval_500ms_triggered())
   {
+    DEBUG_PRINTLN(ptz_get_position());
   }
 
   /*
@@ -240,6 +295,8 @@ void loop()
 
   if (interval_5000ms_triggered())
   {
+    // ptz_MoveUp_by_pulse();
+    // ptz_MoveDown_by_pulse();
   }
 
   /*

@@ -1,0 +1,32 @@
+Driver 5 
+Driver 4
+Driver 3
+Driver 2
+Driver 1
+
+nextion
+
+Distance 1
+Distance 2
+Distance 3
+Distance 4
+Distance 5
+Distance 6
+Distance 7
+Distance 8
+Distance 9
+
+Power 
+
+Limit Switch 2
+Limit Switch 1
+
+Relay 8
+Relay 7 
+Relay 6
+Relay 5
+Relay 4 
+Relay 3 
+Relay 2
+Relay 1
+
