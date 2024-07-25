@@ -4,7 +4,7 @@
 #include "../../driver/DEBUG/debug.h"
 #include "screen.h"
 
-static char buffer[10];
+static char buffer[100];
 
 screen_notification_t notification1;
 screen_notification_t notification2;
@@ -57,6 +57,8 @@ void screen_init()
     screen_print_Notification6();
 
     screen_goto_MainPage();
+    SCREEN_DEBUG("DEBUGGING MODE");
+    //nextion_set_txt("t9", "456789");
 }
 void screen_print_DistanceFront(float cm)
 {
@@ -409,3 +411,4 @@ void screen_goto_LoadingPage()
     nextion_select();
     nextion_set_page(SCREEN_PAGE_LOADING);
 }
+

@@ -5,13 +5,19 @@
 #define SCREEN_COLOR_YELLOW 64832
 #define SCREEN_COLOR_GREEN 5728
 
+#define SCREEN_DEBUG(x)           \
+    {                             \
+        nextion_select();         \
+        nextion_set_txt("t9", x); \
+    }
+
 typedef struct
 {
     int color;
-    char* content;
-    char* footer;
+    char *content;
+    char *footer;
 } screen_notification_t;
-    //char content[10];
+// char content[10];
 typedef enum
 {
     SCREEN_PAGE_LOADING = 1,

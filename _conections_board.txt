@@ -1,32 +1,32 @@
-Driver 5 
-Driver 4
-Driver 3
-Driver 2
-Driver 1
+Driver 5 - MOTOR BACK RIGHT
+Driver 4 - MOTOR BACK LEFT
+Driver 3 - MOTOR FRONT RIGHT
+Driver 2 - MOTOR FRONT LEFT
+Driver 1 - MOTOR PTZ
 
-nextion
+nextion - NEXTION 
 
-Distance 1
-Distance 2
-Distance 3
-Distance 4
-Distance 5
-Distance 6
-Distance 7
-Distance 8
-Distance 9
+Distance 1 - LEFT FRONT 
+Distance 2 - LEFT MIDDLE
+Distance 3 - LEFT BACK
+Distance 4 - BACK
+Distance 5 - FRONT LEFT
+Distance 6 - FRONT RIGHT
+Distance 7 - RIGHT BACK
+Distance 8 - RIGHT MIDDLE
+Distance 9 - RIGHT FRONT
 
-Power 
+Power - BATERIA 24v  
 
-Limit Switch 2
-Limit Switch 1
+Limit Switch 2 - FINAL DE CARRERA INFERIOR
+Limit Switch 1 - FINAL DE CARRERA SUPERIOR
 
-Relay 8
-Relay 7 
-Relay 6
-Relay 5
-Relay 4 
-Relay 3 
-Relay 2
+Relay 8 - PILOTO AMARILLO
+Relay 7 - PILOTO ROJO
+Relay 6 - CIRCULINA EN
+Relay 5 - CIRCULINA SIGNAL
+Relay 4 - LUCES 
+Relay 3 - LUCES 
+Relay 2 - LUCES 
 Relay 1
 

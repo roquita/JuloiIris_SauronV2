@@ -3,7 +3,7 @@
 #include "../UART_MUX/uart_mux.h"
 #include "../DEBUG/debug.h"
 
-static char buffer[30];
+static char buffer[100];
 
 void nextion_init()
 {
@@ -16,6 +16,16 @@ void nextion_select()
 void nextion_set_txt(char *obj, char *txt)
 {
     int size = snprintf(buffer, sizeof(buffer), "main.%s.txt=\"%s\"\xff\xff\xff", obj, txt);
+    if (size < 0 || size >= sizeof(buffer))
+    {
+        DEBUG_PRINTLN(F("nextion_set_txt"));
+        return;
+    }
+    UARTMUX_print(buffer);
+}
+void nextion_add_txt(char *obj, char *txt)
+{
+    int size = snprintf(buffer, sizeof(buffer), "main.%s.txt+=\"%s\"\xff\xff\xff", obj, txt);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("nextion_set_txt"));

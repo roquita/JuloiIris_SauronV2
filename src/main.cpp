@@ -13,6 +13,7 @@
 #include "driver/DEBUG/debug.h"
 #include "driver/XKC-KL200/xkc_kl200.h"
 #include "driver/BLD_300B/bld_300b.h"
+#include "driver/NEXTION/nextion.h"
 
 void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
 {
@@ -34,24 +35,30 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     if (!valid_params)
     {
       DEBUG_PRINTLN(F("LOCOMOTION invalid params"));
+      SCREEN_DEBUG("LOCOMOTION invalid params");
       break;
     }
 
     switch (direction)
     {
     case 0: // PARAR
+      SCREEN_DEBUG("PARAR");
       wheel_stop();
       break;
     case 1: // ADELANTE
+      SCREEN_DEBUG("ADELANTE");
       wheel_move_forward(velocity);
       break;
     case 2: // ATRAS
+      SCREEN_DEBUG("ATRAS ");
       wheel_move_backward(velocity);
       break;
     case 3: // GIRAR DERECHA
+      SCREEN_DEBUG("GIRAR DERECHA");
       wheel_turn_right(velocity);
       break;
     default: // GIRAR IZQUIERDA
+      SCREEN_DEBUG("GIRAR IZQUIERDA");
       wheel_turn_left(velocity);
       break;
     }
@@ -69,9 +76,10 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     if (!valid_params)
     {
       DEBUG_PRINTLN(F("MAX VELOCITY invalid params"));
+      SCREEN_DEBUG("MAX VELOCITY invalid params");
       break;
     }
-
+    SCREEN_DEBUG("MAX VELOCITY");
     wheel_set_MaxSpeed(MaxVelocity);
   }
   break;
@@ -98,13 +106,13 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     switch (method)
     {
     case 1: // BY PULSE
-      value == 1 ? ptz_MoveUp_by_pulse() : ptz_MoveDown_by_pulse();
+      // value == 1 ? ptz_MoveUp_by_pulse() : ptz_MoveDown_by_pulse();
       break;
     case 2: // BY LIMIT
-      value == 1 ? ptz_MoveUp_by_limit() : ptz_MoveDown_by_limit();
+      // value == 1 ? ptz_MoveUp_by_limit() : ptz_MoveDown_by_limit();
       break;
     default: // BY POSITION
-      ptz_move_by_position(value);
+      // ptz_move_by_position(value);
       break;
     }
   }
@@ -128,11 +136,12 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     {
     case 1: // NO INTERNET
       wheel_stop();
-      ptz_stop();
-      load_Toogling_1s_5s_PilotRed();
+      // ptz_stop();
+      // load_Toogling_1s_5s_PilotRed();
       screen_queue_NoInternet_Notification();
       break;
     case 2: // SI INTERNET
+      screen_goto_MainPage();
       screen_queue_YesInternet_Notificacion();
       break;
     default: // BATERIA BAJA
@@ -159,10 +168,10 @@ void SUB_MsgToSauron_app_cb(int type, float param1, float param2)
     switch (LoadCode)
     {
     case 0: //  APAGAR LUCES
-      load_TurnOff_light();
+      // load_TurnOff_light();
       break;
     default: // ENCENDER LUCES
-      load_TurnOn_light();
+      // load_TurnOn_light();
       break;
     }
   }
@@ -226,19 +235,24 @@ void setup()
 {
   DEBUG_INIT();
   DEBUG_PRINTLN(F("SETUP IN"));
-
-  // screen_init();
-  // interval_init();
+delay(5000);
+  screen_init();
+  interval_init();
   // load_init();
   // distance_init();
   // temphumi_init();
-  // wheel_init();
-  ptz_init();
+  wheel_init();
+ // wheel_set_MaxSpeed(100);
+ // wheel_move_forward(0.5);
+  //delay(1000);
+ // wheel_stop();
+  // ptz_init();
 
-  // ros_init(SUB_MsgToSauron_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
+  ros_init(SUB_MsgToSauron_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
 
   DEBUG_PRINTLN(F("SETUP OUT"));
 }
+/*
 int target_position = -1;
 bool number_received()
 {
@@ -249,18 +263,19 @@ bool number_received()
   else
     return true;
 }
-
+*/
 void loop()
 {
+  /*
   if (number_received())
   {
     ptz_move_by_position(target_position);
     target_position = -1;
   }
-
+*/
   if (interval_100ms_triggered())
   {
-    // ros_loop();
+    ros_loop();
   }
 
   if (interval_500ms_triggered())
