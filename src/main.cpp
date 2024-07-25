@@ -235,44 +235,27 @@ void setup()
 {
   DEBUG_INIT();
   DEBUG_PRINTLN(F("SETUP IN"));
-delay(5000);
+  delay(5000);
   screen_init();
   interval_init();
   // load_init();
   // distance_init();
   // temphumi_init();
   wheel_init();
- // wheel_set_MaxSpeed(100);
- // wheel_move_forward(0.5);
-  //delay(1000);
- // wheel_stop();
+  wheel_set_MaxSpeed(100);
+  wheel_turn_right(0.5);
+  delay(5000);
+  wheel_stop();
   // ptz_init();
 
   ros_init(SUB_MsgToSauron_app_cb, PUB_Sensor_app_cb, PUB_AlertSauron_app_cb);
 
   DEBUG_PRINTLN(F("SETUP OUT"));
 }
-/*
-int target_position = -1;
-bool number_received()
-{
-  DEBUG_GET_NUM(&target_position);
 
-  if (target_position == -1)
-    return false;
-  else
-    return true;
-}
-*/
 void loop()
 {
-  /*
-  if (number_received())
-  {
-    ptz_move_by_position(target_position);
-    target_position = -1;
-  }
-*/
+
   if (interval_100ms_triggered())
   {
     ros_loop();
@@ -280,114 +263,12 @@ void loop()
 
   if (interval_500ms_triggered())
   {
-    DEBUG_PRINTLN(ptz_get_position());
   }
-
-  /*
-    if (interval_1000ms_triggered())
-    {
-      distance_update();
-      temphumi_update();
-
-      screen_print_DistanceFront(distance_get_Front() / 10.0);
-      screen_print_DistanceRightFront(distance_get_RightFront() / 10.0);
-      screen_print_DistanceRightMiddle(distance_get_RightMiddle() / 10.0);
-      screen_print_DistanceRightBack(distance_get_RightBack() / 10.0);
-      screen_print_DistanceLeftFront(distance_get_LeftFront() / 10.0);
-      screen_print_DistanceLeftMiddle(distance_get_LeftMiddle() / 10.0);
-      screen_print_DistanceLeftBack(distance_get_LeftBack() / 10.0);
-      screen_print_DistanceBackRight(distance_get_BackRight() / 10.0);
-      screen_print_DistanceBackLeft(distance_get_BackLeft() / 10.0);
-
-      screen_print_BatteryLevel(50.0);
-      screen_print_EnvironmentTemperature(temphumi_get_temperature());
-      screen_print_EnvironmentHumidity(temphumi_get_humidity());
-    }
-  */
   if (interval_2000ms_triggered())
   {
   }
 
   if (interval_5000ms_triggered())
   {
-    // ptz_MoveUp_by_pulse();
-    // ptz_MoveDown_by_pulse();
   }
-
-  /*
-
-  }
-  */
-
-  /*
-  #include <Arduino.h>
-  #include "app/load/load.h"
-  #include "app/screen/screen.h"
-  #include "app/sensor/distance.h"
-  #include "app/sensor/temphumi.h"
-
-  #include "project_defines.h"
-
-  #include "DFRobot_QMC5883.h"
-
-  DFRobot_QMC5883 compass(&Wire2, 0x0D);
-
-  void setup()
-  {
-    Serial.begin(115200);
-
-    screen_init();
-    screen_goto_MainPage();
-
-    distance_init();
-    temphumi_init();
-    load_init();
-    load_toogling_led();
-
-    while (!compass.begin())
-    {
-      Serial.println("Could not find a valid 5883 sensor, check wiring!");
-      delay(500);
-    }
-    if (compass.isQMC())
-    {
-      Serial.println("Initialize QMC5883");
-       compass.setRange(QMC5883_RANGE_8GA);
-       Serial.print("compass range is:");
-       Serial.println(compass.getRange());
-
-       compass.setMeasurementMode(QMC5883_CONTINOUS);
-       Serial.print("compass measurement mode is:");
-       Serial.println(compass.getMeasurementMode());
-
-       compass.setDataRate(QMC5883_DATARATE_10HZ);
-       Serial.print("compass data rate is:");
-       Serial.println(compass.getDataRate());
-
-       compass.setSamples(QMC5883_SAMPLES_8);
-       Serial.print("compass samples is:");
-       Serial.println(compass.getSamples());
-    }
-  }
-  // int i = 0;
-
-  void loop()
-  {
-
-    //float declinationAngle = (4.0 + (26.0 / 60.0)) / (180 / PI);
-    //compass.setDeclinationAngle(declinationAngle);
-    sVector_t mag = compass.readRaw();
-    //compass.getHeadingDegrees();
-    Serial.print("X:");
-    Serial.print(mag.XAxis);
-    Serial.print(" Y:");
-    Serial.print(mag.YAxis);
-    Serial.print(" Z:");
-    Serial.println(mag.ZAxis);
-   // Serial.print("Degress = ");
-    //Serial.println(mag.HeadingDegress);
-    delay(1000);
-
-  }
-  */
 }
