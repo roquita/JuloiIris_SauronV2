@@ -21,19 +21,19 @@ void screen_init()
 
     // SENSORS
 
-    screen_print_DistanceFront(0.0);
-    screen_print_DistanceRightFront(0.0);
-    screen_print_DistanceRightMiddle(0.0);
-    screen_print_DistanceRightBack(0.0);
-    screen_print_DistanceLeftFront(0.0);
-    screen_print_DistanceLeftMiddle(0.0);
-    screen_print_DistanceLeftBack(0.0);
-    screen_print_DistanceBackRight(0.0);
-    screen_print_DistanceBackLeft(0.0);
+    screen_print_DistanceFront(0);
+    screen_print_DistanceRightFront(0);
+    screen_print_DistanceRightMiddle(0);
+    screen_print_DistanceRightBack(0);
+    screen_print_DistanceLeftFront(0);
+    screen_print_DistanceLeftMiddle(0);
+    screen_print_DistanceLeftBack(0);
+    screen_print_DistanceBackRight(0);
+    screen_print_DistanceBackLeft(0);
 
-    screen_print_BatteryLevel(0.0);
-    screen_print_EnvironmentTemperature(0.0);
-    screen_print_EnvironmentHumidity(0.0);
+    screen_print_BatteryLevel(0);
+    screen_print_EnvironmentTemperature(0);
+    screen_print_EnvironmentHumidity(0);
 
     // NOTIFICATIONS
 
@@ -60,9 +60,9 @@ void screen_init()
     SCREEN_DEBUG("DEBUGGING MODE");
     //nextion_set_txt("t9", "456789");
 }
-void screen_print_DistanceFront(float cm)
+void screen_print_DistanceFront(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_DistanceFront"));
@@ -72,9 +72,9 @@ void screen_print_DistanceFront(float cm)
     nextion_select();
     nextion_set_txt("t0", buffer);
 }
-void screen_print_DistanceRightFront(float cm)
+void screen_print_DistanceRightFront(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_RightFront"));
@@ -84,9 +84,9 @@ void screen_print_DistanceRightFront(float cm)
     nextion_select();
     nextion_set_txt("t2", buffer);
 }
-void screen_print_DistanceRightMiddle(float cm)
+void screen_print_DistanceRightMiddle(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_RightMiddle"));
@@ -96,9 +96,9 @@ void screen_print_DistanceRightMiddle(float cm)
     nextion_select();
     nextion_set_txt("t3", buffer);
 }
-void screen_print_DistanceRightBack(float cm)
+void screen_print_DistanceRightBack(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_RightBack"));
@@ -108,9 +108,9 @@ void screen_print_DistanceRightBack(float cm)
     nextion_select();
     nextion_set_txt("t5", buffer);
 }
-void screen_print_DistanceLeftFront(float cm)
+void screen_print_DistanceLeftFront(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_LeftFront"));
@@ -120,9 +120,9 @@ void screen_print_DistanceLeftFront(float cm)
     nextion_select();
     nextion_set_txt("t1", buffer);
 }
-void screen_print_DistanceLeftMiddle(float cm)
+void screen_print_DistanceLeftMiddle(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_LeftMiddle"));
@@ -132,9 +132,9 @@ void screen_print_DistanceLeftMiddle(float cm)
     nextion_select();
     nextion_set_txt("t4", buffer);
 }
-void screen_print_DistanceLeftBack(float cm)
+void screen_print_DistanceLeftBack(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_LeftBack"));
@@ -144,9 +144,9 @@ void screen_print_DistanceLeftBack(float cm)
     nextion_select();
     nextion_set_txt("t8", buffer);
 }
-void screen_print_DistanceBackRight(float cm)
+void screen_print_DistanceBackRight(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_BackRight"));
@@ -156,9 +156,9 @@ void screen_print_DistanceBackRight(float cm)
     nextion_select();
     nextion_set_txt("t6", buffer);
 }
-void screen_print_DistanceBackLeft(float cm)
+void screen_print_DistanceBackLeft(int cm)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%icm", (int)cm);
+    int size = snprintf(buffer, sizeof(buffer), "%icm", cm);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_BackLeft"));
@@ -169,9 +169,9 @@ void screen_print_DistanceBackLeft(float cm)
     nextion_set_txt("t7", buffer);
 }
 
-void screen_print_BatteryLevel(float percent)
+void screen_print_BatteryLevel(int percent)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%i", (int)percent);
+    int size = snprintf(buffer, sizeof(buffer), "%i", percent);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_BatteryLevel"));
@@ -181,9 +181,9 @@ void screen_print_BatteryLevel(float percent)
     nextion_select();
     nextion_set_txt("t26", buffer);
 }
-void screen_print_EnvironmentTemperature(float celsius)
+void screen_print_EnvironmentTemperature(int celsius)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%i", (int)celsius);
+    int size = snprintf(buffer, sizeof(buffer), "%i", celsius);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_EnvironmentTemperature"));
@@ -193,9 +193,9 @@ void screen_print_EnvironmentTemperature(float celsius)
     nextion_select();
     nextion_set_txt("t27", buffer);
 }
-void screen_print_EnvironmentHumidity(float percent)
+void screen_print_EnvironmentHumidity(int percent)
 {
-    int size = snprintf(buffer, sizeof(buffer), "%i", (int)percent);
+    int size = snprintf(buffer, sizeof(buffer), "%i", percent);
     if (size < 0 || size >= sizeof(buffer))
     {
         DEBUG_PRINTLN(F("screen_print_EnvironmentHumidity"));
