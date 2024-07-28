@@ -86,7 +86,7 @@ void BLD300B_driver2_init()
     _driver2_alarm_time = millis();
     // speed
     pinMode(DRIVER_2_SPEED_PIN, INPUT);
-    attachInterrupt(DRIVER_2_SPEED_PIN, driver2_speed_cb, CHANGE);
+    //attachInterrupt(DRIVER_2_SPEED_PIN, driver2_speed_cb, CHANGE);
     _driver2_speed_duty = 0;
     // direction
     pinMode(DRIVER_2_FR_PIN, OUTPUT);

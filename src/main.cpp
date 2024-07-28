@@ -6,7 +6,7 @@ void setup()
   DEBUG_PRINTLN(F("SETUP IN"));
   screen_init();
   interval_init();
-  // load_init();
+  //load_init();
   distance_init();
   temphumi_init();
   wheel_init();
@@ -43,7 +43,7 @@ void loop()
 
   if (interval_1000ms_triggered())
   {
-    //distance_update();
+    distance_update();
     temphumi_update();
 
     screen_print_DistanceFront(distance_get_Front_mm() / 10);
