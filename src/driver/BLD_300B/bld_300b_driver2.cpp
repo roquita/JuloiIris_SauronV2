@@ -60,7 +60,7 @@ void driver2_alarm_cb()
 void driver2_speed_cb()
 {
     int now = millis();
-    if (digitalRead(DRIVER_2_ALARM_PIN) == 1)
+    if (digitalRead(DRIVER_2_SPEED_PIN) == 1)
     {
         int high = _driver2_speed_time_up - _driver2_speed_time_down;
         int total = now - _driver2_speed_time_up;
