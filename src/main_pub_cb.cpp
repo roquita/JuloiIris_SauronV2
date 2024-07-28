@@ -20,7 +20,7 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
                        distance_get_BackLeft_mm() / 10, 
                        0, 0, 0, 0, 0, 
                        0, 0, 
-                       temphumi_get_temperature(), temphumi_get_humidity(), 
+                       (int)temphumi_get_temperature(), (int)temphumi_get_humidity(), 
                        0, 0,
                        wheel_get_MaxSpeed());
   bool parsing_success = (bytes > 0) || (bytes < (*size));
