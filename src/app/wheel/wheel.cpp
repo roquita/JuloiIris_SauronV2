@@ -81,7 +81,7 @@ void wheel_init()
 }
 void wheel_stop()
 {
-    _wheel_MaxSpeed = 0;
+    //_wheel_MaxSpeed = 0;
     WHEEL_FRONT_RIGHT_STOP();
     WHEEL_FRONT_LEFT_STOP();
     WHEEL_BACK_RIGHT_STOP();

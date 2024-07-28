@@ -13,8 +13,8 @@ void setup()
   // ptz_init();
 
 
-  wheel_set_MaxSpeed(90);
-  wheel_move_forward(1.0);
+ // wheel_set_MaxSpeed(90);
+ // wheel_move_forward(1.0);
 
 
   ros_init(SUB_Locomotion_app_cb,

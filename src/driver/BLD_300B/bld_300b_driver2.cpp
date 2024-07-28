@@ -78,10 +78,10 @@ void BLD300B_driver2_init()
     // general
     analogWriteResolution(8);
 
-    /***************************** DRIVER 5  ************************/
+    /***************************** DRIVER 2  ************************/
     // alarm
     pinMode(DRIVER_2_ALARM_PIN, INPUT);
-    //attachInterrupt(DRIVER_2_ALARM_PIN, driver5_alarm_cb, CHANGE);
+    //attachInterrupt(DRIVER_2_ALARM_PIN, driver2_alarm_cb, CHANGE);
     _driver2_alarm_pulses = 0;
     _driver2_alarm_time = millis();
     // speed
