@@ -12,6 +12,11 @@ void setup()
   wheel_init();
   // ptz_init();
 
+
+  wheel_set_MaxSpeed(90);
+  wheel_move_forward(1.0);
+
+
   ros_init(SUB_Locomotion_app_cb,
            SUB_MaxVelocity_app_cb,
            SUB_Tower_app_cb,
@@ -38,7 +43,7 @@ void loop()
 
   if (interval_1000ms_triggered())
   {
-    distance_update();
+    //distance_update();
     temphumi_update();
 
     screen_print_DistanceFront(distance_get_Front_mm() / 10);
