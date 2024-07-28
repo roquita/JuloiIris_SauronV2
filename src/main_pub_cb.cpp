@@ -12,7 +12,11 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
                                       "'uls':%i,"
                                       "'lls':%i"
                                       "}\"",
-                       1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 24, 15, 25, 78, 0, 1);
+                       distance_get_Front_mm() / 10, distance_get_RightFront_mm() / 10,
+                       distance_get_RightMiddle_mm() / 10, distance_get_RightBack_mm() / 10,
+                       distance_get_LeftFront_mm() / 10, distance_get_LeftMiddle_mm() / 10,
+                       distance_get_LeftBack_mm() / 10, distance_get_BackRight_mm() / 10,
+                       distance_get_BackLeft_mm() / 10, 1, 2, 3, 4, 5, 24, 15, 25, 78, 0, 1);
   bool parsing_success = (bytes > 0) || (bytes < (*size));
   *size = bytes + 1;
   if (!parsing_success)
