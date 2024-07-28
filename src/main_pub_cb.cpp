@@ -10,13 +10,19 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
                                       "'tem':%i,"
                                       "'hum':%i,"
                                       "'uls':%i,"
-                                      "'lls':%i"
+                                      "'lls':%i,"
+                                      "'vmx':%i"
                                       "}\"",
                        distance_get_Front_mm() / 10, distance_get_RightFront_mm() / 10,
                        distance_get_RightMiddle_mm() / 10, distance_get_RightBack_mm() / 10,
                        distance_get_LeftFront_mm() / 10, distance_get_LeftMiddle_mm() / 10,
                        distance_get_LeftBack_mm() / 10, distance_get_BackRight_mm() / 10,
-                       distance_get_BackLeft_mm() / 10, 1, 2, 3, 4, 5, 24, 15, 25, 78, 0, 1);
+                       distance_get_BackLeft_mm() / 10, 
+                       0, 0, 0, 0, 0, 
+                       0, 0, 
+                       temphumi_get_temperature(), temphumi_get_humidity(), 
+                       0, 0,
+                       wheel_get_MaxSpeed());
   bool parsing_success = (bytes > 0) || (bytes < (*size));
   *size = bytes + 1;
   if (!parsing_success)

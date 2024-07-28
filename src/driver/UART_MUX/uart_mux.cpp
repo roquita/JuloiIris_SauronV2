@@ -15,7 +15,8 @@ void UARTMUX_init()
     initialized = true;
 
     Serial8.begin(2400);
-    Serial8.setTimeout(1000);
+    //Serial8.setTimeout(1000);
+    Serial8.setTimeout(100);
     
     pinMode(MUX_S3_PIN, OUTPUT);
     pinMode(MUX_S2_PIN, OUTPUT);
