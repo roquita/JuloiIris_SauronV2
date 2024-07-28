@@ -92,7 +92,7 @@ void SUB_MsgToSauron_cb(const void *msgin)
 
         // user callback
         if (_MaxVelocity_app_cb)
-            _MaxVelocity_app_cb(int MaxVelocity);
+            _MaxVelocity_app_cb( MaxVelocity);
     }
     else if (type == 2)
     {
