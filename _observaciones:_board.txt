@@ -1,0 +1,3 @@
+* uart mux por defecto tiene opto energizado en idle mode del uart:
+    Debe ser desactivado por defecto.
+* En los drivers(pin SV), en el lado del mcu tiene pull-down 10k. Cambiar a pull-up 10k.

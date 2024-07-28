@@ -62,9 +62,9 @@ void driver2_speed_cb()
     int now = millis();
     if (digitalRead(DRIVER_2_SPEED_PIN) == 1)
     {
-        int high = _driver2_speed_time_up - _driver2_speed_time_down;
+        int high = _driver2_speed_time_down - _driver2_speed_time_up;
         int total = now - _driver2_speed_time_up;
-        _driver2_speed_duty = 100 - (high * 100) / total; // complement
+        _driver2_speed_duty = (int)(100.0 - (high * 100.0) / total); // complement
 
         _driver2_speed_time_up = now;
     }
@@ -81,7 +81,7 @@ void BLD300B_driver2_init()
     /***************************** DRIVER 2  ************************/
     // alarm
     pinMode(DRIVER_2_ALARM_PIN, INPUT);
-    //attachInterrupt(DRIVER_2_ALARM_PIN, driver2_alarm_cb, CHANGE);
+    // attachInterrupt(DRIVER_2_ALARM_PIN, driver2_alarm_cb, CHANGE);
     _driver2_alarm_pulses = 0;
     _driver2_alarm_time = millis();
     // speed
