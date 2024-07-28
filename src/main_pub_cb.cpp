@@ -18,7 +18,7 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
                        distance_get_LeftFront_mm() / 10, distance_get_LeftMiddle_mm() / 10,
                        distance_get_LeftBack_mm() / 10, distance_get_BackRight_mm() / 10,
                        distance_get_BackLeft_mm() / 10, 
-                       0, 0, 0, 0, 0, 
+                       0, wheel_FrontLeft_get_speed(), 0, 0, 0, 
                        0, 0, 
                        (int)temphumi_get_temperature(), (int)temphumi_get_humidity(), 
                        0, 0,

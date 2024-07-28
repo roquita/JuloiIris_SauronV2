@@ -43,7 +43,7 @@ void loop()
 
   if (interval_1000ms_triggered())
   {
-    //distance_update();
+    distance_update();
     temphumi_update();
 
     screen_print_DistanceFront(distance_get_Front_mm() / 10);

@@ -67,6 +67,8 @@
 #define WHEEL_BACK_RIGHT_STOP() BLD300B_driver5_set_duty(0)
 #define WHEEL_BACK_LEFT_STOP() BLD300B_driver4_set_duty(0)
 
+#define WHEEL_FRONT_LEFT_GET_SPEED() BLD300B_driver2_get_duty()
+
 int _wheel_MaxSpeed = 0;
 
 void wheel_init()
@@ -121,4 +123,9 @@ void wheel_set_MaxSpeed(int MaxSpeed) // 0-100%
 int wheel_get_MaxSpeed()
 {
     return _wheel_MaxSpeed;
+}
+
+int wheel_FrontLeft_get_speed()
+{
+    return WHEEL_FRONT_LEFT_GET_SPEED();
 }
