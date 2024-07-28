@@ -1,0 +1,14 @@
+- Pruebas Robot
+
+Avanzar linealmente despacio y rápido con el joystick físico y virtual hacia adelante y atrás.
+Girar sobre su eje despacio y rápido con el joystick físico y virtual hacia derecha e izquierda.
+La circulina debe sonar mientras algún motor está en movimiento.
+Alzar la torre por pulsos.
+Bajar la torre por pulsos.
+Alzar la torre continuamente hasta el final de carrera
+Bajar la torre continuamente hasta el final de carrera
+Ver ambas confirmaciones del final de carrera en la web
+Cuando la torre no marque el final de carrera inferior no debe poder moverse el robot y debe mostrarse esa información de que la torre no está en su posición de reposo.
+Si el robot se encuentra en un plano inclinado mayor a 10° no debe poder subirse la torre y mandar esta información
+Marcar alerta cuando un sensor de proximidad está a 20cm o menos
+Estacionar el robot con un QR usando los sensores de proximidad

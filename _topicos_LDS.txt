@@ -30,6 +30,9 @@
 	linear z = 4 => LOAD
 		linear x = 0 => apagar luces
 		linear x = 1 => encender luces
+
+	linear z = 5 => BATTERY LEVEL
+		linear x = [0-100]%
 /***************************** PUBLICADORES ********************************************/
 // TOPICO "/tensey/sensor", timer 1s, string
  

@@ -23,7 +23,12 @@ rcl_node_t _node;
 rcl_subscription_t _sMsgToSauron;
 geometry_msgs__msg__Twist _mMsgToSauron;
 rclc_executor_t _eMsgToSauron;
-MsgToSauron_app_cb_t _MsgToSauron_app_cb = NULL;
+Locomotion_app_cb_t _Locomotion_app_cb = NULL;
+MaxVelocity_app_cb_t _MaxVelocity_app_cb = NULL;
+Tower_app_cb_t _Tower_app_cb = NULL;
+Alert_app_cb_t _Alert_app_cb = NULL;
+Load_app_cb_t _Load_app_cb = NULL;
+Battery_app_cb_t _Battery_app_cb = NULL;
 
 // Publisher Sensors
 rcl_publisher_t _pSensor;
@@ -48,9 +53,137 @@ void SUB_MsgToSauron_cb(const void *msgin)
     float param1 = (float)mMsgToSauron->linear.x;
     float param2 = (float)mMsgToSauron->linear.y;
 
-    if (_MsgToSauron_app_cb)
+    if (type == 0)
     {
-        _MsgToSauron_app_cb(type, param1, param2);
+        int direction = (int)param1;
+        float velocity = param2;
+        DEBUG_PRINT(F("LOCOMOTION:\t"));
+        DEBUG_PRINT(F("Direccion:"));
+        DEBUG_PRINT(direction);
+        DEBUG_PRINT(F(" || Rapidez:"));
+        DEBUG_PRINTLN(velocity);
+
+        bool valid_direction = (direction >= 0 && direction <= 4);
+        bool valid_velocity = (velocity >= 0.0 && velocity <= 1.0);
+        bool valid_params = valid_direction && valid_velocity;
+        if (!valid_params)
+        {
+            DEBUG_PRINTLN(F("LOCOMOTION invalid params"));
+            return;
+        }
+
+        // user callback
+        if (_Locomotion_app_cb)
+            _Locomotion_app_cb(direction, velocity);
+    }
+    else if (type == 1)
+    {
+        int MaxVelocity = (int)param1;
+        DEBUG_PRINT(F("MAX VELOCITY(%):\t"));
+        DEBUG_PRINTLN(MaxVelocity);
+
+        bool valid_MaxVelocity = (MaxVelocity >= 0 && MaxVelocity <= 100);
+        bool valid_params = valid_MaxVelocity;
+        if (!valid_params)
+        {
+            DEBUG_PRINTLN(F("MAX VELOCITY invalid params"));
+            return;
+        }
+
+        // user callback
+        if (_MaxVelocity_app_cb)
+            _MaxVelocity_app_cb(int MaxVelocity);
+    }
+    else if (type == 2)
+    {
+        int method = (int)param1;
+        int value = (int)param2;
+        DEBUG_PRINT(F("TOWER:\t"));
+        DEBUG_PRINT(F("Metodo:"));
+        DEBUG_PRINT(method);
+        DEBUG_PRINT(F(" || Valor:"));
+        DEBUG_PRINTLN(value);
+
+        bool valid_method_by_pulse = (method == 1 && (value == 1 || value == -1));
+        bool valid_method_by_limit = (method == 2 && (value == 1 || value == -1));
+        bool valid_mehotd_by_pos = (method == 3 && (value >= 0 && value <= 100));
+        bool valid_params = valid_method_by_pulse || valid_method_by_limit || valid_mehotd_by_pos;
+        if (!valid_params)
+        {
+            DEBUG_PRINTLN(F("TOWER invalid params"));
+            return;
+        }
+
+        // user callback
+        if (_Tower_app_cb)
+            _Tower_app_cb(method, value);
+    }
+    else if (type == 3)
+    {
+        int AlertCode = (int)param1;
+        DEBUG_PRINT(F("ALERT:\t"));
+        DEBUG_PRINT(F("code:"));
+        DEBUG_PRINTLN(AlertCode);
+
+        bool valid_AlertCode = (AlertCode >= 1 && AlertCode <= 3);
+        bool valid_params = valid_AlertCode;
+        if (!valid_params)
+        {
+            DEBUG_PRINTLN(F("ALERT invalid params"));
+            return;
+        }
+
+        // user callback
+        if (_Alert_app_cb)
+            _Alert_app_cb(AlertCode);
+    }
+    else if (type == 4)
+    {
+        int LoadCode = (int)param1;
+        DEBUG_PRINT(F("LOAD:\t"));
+        DEBUG_PRINT(F("code:"));
+        DEBUG_PRINTLN(LoadCode);
+
+        bool valid_LoadCode = (LoadCode >= 0 && LoadCode <= 1);
+        bool valid_params = valid_LoadCode;
+        if (!valid_params)
+        {
+            DEBUG_PRINTLN(F("LOAD invalid params"));
+            return;
+        }
+
+        // user callback
+        if (_Load_app_cb)
+            _Load_app_cb(LoadCode);
+    }
+    else if (type == 5)
+    {
+        int BatteryLevel = (int)param1;
+        DEBUG_PRINT(F("BATTERY LEVEL:\t"));
+        DEBUG_PRINT(F("level:"));
+        DEBUG_PRINTLN(BatteryLevel);
+
+        bool valid_BatteryLevel = (BatteryLevel >= 0 && BatteryLevel <= 100);
+        bool valid_params = valid_BatteryLevel;
+        if (!valid_params)
+        {
+            DEBUG_PRINTLN(F("BATTERY LEVEL invalid params"));
+            return;
+        }
+
+        // user callback
+        if (_Battery_app_cb)
+            _Battery_app_cb(BatteryLevel);
+    }
+    else
+    {
+        DEBUG_PRINT(F("UNKNOWN:\t"));
+        DEBUG_PRINT(F("Type:"));
+        DEBUG_PRINT(type);
+        DEBUG_PRINT(F(" || param1:"));
+        DEBUG_PRINT(param1);
+        DEBUG_PRINT(F(" || param2:"));
+        DEBUG_PRINTLN(param2);
     }
 }
 void PUB_Sensor_cb(rcl_timer_t *timer, int64_t last_call_time)
@@ -120,12 +253,22 @@ void PUB_AlertSauron_cb(rcl_timer_t *timer, int64_t last_call_time)
     }
 }
 
-void ros_init(MsgToSauron_app_cb_t MsgToSauron_app_cb,
+void ros_init(Locomotion_app_cb_t Locomotion_app_cb,
+              MaxVelocity_app_cb_t MaxVelocity_app_cb,
+              Tower_app_cb_t Tower_app_cb,
+              Alert_app_cb_t Alert_app_cb,
+              Load_app_cb_t Load_app_cb,
+              Battery_app_cb_t Battery_app_cb,
               Sensor_app_cb_t Sensor_app_cb,
               AlertSauron_app_cb_t AlertSauron_app_cb)
 {
     // set app callbacks
-    _MsgToSauron_app_cb = MsgToSauron_app_cb;
+    _Locomotion_app_cb = Locomotion_app_cb;
+    _MaxVelocity_app_cb = MaxVelocity_app_cb;
+    _Tower_app_cb = Tower_app_cb;
+    _Alert_app_cb = Alert_app_cb;
+    _Load_app_cb = Load_app_cb;
+    _Battery_app_cb = Battery_app_cb;
     _Sensor_app_cb = Sensor_app_cb;
     _AlertSauron_app_cb = AlertSauron_app_cb;
 
@@ -155,7 +298,6 @@ void ros_init(MsgToSauron_app_cb_t MsgToSauron_app_cb,
     rclc_timer_init_default(&_tAlertSauron, &_support, RCL_MS_TO_NS(1000), PUB_AlertSauron_cb);
 
     // executors
-
     rclc_executor_init(&_eMsgToSauron, &_support.context, 1, &_allocator);
     rclc_executor_add_subscription(&_eMsgToSauron, &_sMsgToSauron, &_mMsgToSauron, &SUB_MsgToSauron_cb, ON_NEW_DATA);
 

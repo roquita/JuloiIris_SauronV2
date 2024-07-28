@@ -2,12 +2,12 @@
 
 void distance_init();
 void distance_update();
-int distance_get_Front();
-int distance_get_RightFront();
-int distance_get_RightMiddle();
-int distance_get_RightBack();
-int distance_get_LeftFront();
-int distance_get_LeftMiddle();
-int distance_get_LeftBack();
-int distance_get_BackRight();
-int distance_get_BackLeft();
+int distance_get_Front_mm();
+int distance_get_RightFront_mm();
+int distance_get_RightMiddle_mm();
+int distance_get_RightBack_mm();
+int distance_get_LeftFront_mm();
+int distance_get_LeftMiddle_mm();
+int distance_get_LeftBack_mm();
+int distance_get_BackRight_mm();
+int distance_get_BackLeft_mm();

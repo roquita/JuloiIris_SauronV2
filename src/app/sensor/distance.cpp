@@ -45,39 +45,39 @@ void distance_update()
     xkc_kl200_select(XKC_KL200_DEVICE_5);
     xkc_kl200_get_data(&BackLeft_mm);
 }
-int distance_get_Front()
+int distance_get_Front_mm()
 {
     return Front_mm;
 }
-int distance_get_RightFront()
+int distance_get_RightFront_mm()
 {
     return RightFront_mm;
 }
-int distance_get_RightMiddle()
+int distance_get_RightMiddle_mm()
 {
     return RightMiddle_mm;
 }
-int distance_get_RightBack()
+int distance_get_RightBack_mm()
 {
     return RightBack_mm;
 }
-int distance_get_LeftFront()
+int distance_get_LeftFront_mm()
 {
     return LeftFront_mm;
 }
-int distance_get_LeftMiddle()
+int distance_get_LeftMiddle_mm()
 {
     return LeftMiddle_mm;
 }
-int distance_get_LeftBack()
+int distance_get_LeftBack_mm()
 {
     return LeftBack_mm;
 }
-int distance_get_BackRight()
+int distance_get_BackRight_mm()
 {
     return BackRight_mm;
 }
-int distance_get_BackLeft()
+int distance_get_BackLeft_mm()
 {
     return BackLeft_mm;
 }

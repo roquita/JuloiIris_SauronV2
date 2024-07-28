@@ -17,7 +17,7 @@ typedef struct
     char *content;
     char *footer;
 } screen_notification_t;
-// char content[10];
+
 typedef enum
 {
     SCREEN_PAGE_LOADING = 1,
@@ -25,19 +25,19 @@ typedef enum
 } screen_page_t;
 
 void screen_init();
-void screen_print_DistanceFront(float cm);
-void screen_print_DistanceRightFront(float cm);
-void screen_print_DistanceRightMiddle(float cm);
-void screen_print_DistanceRightBack(float cm);
-void screen_print_DistanceLeftFront(float cm);
-void screen_print_DistanceLeftMiddle(float cm);
-void screen_print_DistanceLeftBack(float cm);
-void screen_print_DistanceBackRight(float cm);
-void screen_print_DistanceBackLeft(float cm);
+void screen_print_DistanceFront(int cm);
+void screen_print_DistanceRightFront(int cm);
+void screen_print_DistanceRightMiddle(int cm);
+void screen_print_DistanceRightBack(int cm);
+void screen_print_DistanceLeftFront(int cm);
+void screen_print_DistanceLeftMiddle(int cm);
+void screen_print_DistanceLeftBack(int cm);
+void screen_print_DistanceBackRight(int cm);
+void screen_print_DistanceBackLeft(int cm);
 
-void screen_print_BatteryLevel(float percent);
-void screen_print_EnvironmentTemperature(float celsius);
-void screen_print_EnvironmentHumidity(float percent);
+void screen_print_BatteryLevel(int percent);
+void screen_print_EnvironmentTemperature(int celsius);
+void screen_print_EnvironmentHumidity(int percent);
 
 void screen_print_Notification1();
 void screen_print_Notification2();
