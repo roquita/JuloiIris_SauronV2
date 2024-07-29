@@ -21,7 +21,7 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
                        0, wheel_FrontLeft_get_speed(), 0, 0, 0,
                        0, 0,
                        (int)temphumi_get_temperature(), (int)temphumi_get_humidity(),
-                       ptz_uls_pressed() == true ? 1 : 0, ptz_lls_pressed() == true ? 1 : 0,
+                       (ptz_uls_pressed() ? 1 : 0), (ptz_lls_pressed() ? 1 : 0),
                        wheel_get_MaxSpeed());
   bool parsing_success = (bytes > 0) || (bytes < (*size));
   *size = bytes + 1;

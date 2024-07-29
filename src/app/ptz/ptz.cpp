@@ -105,18 +105,21 @@ void ptz_init()
     UPPER_LIMIT_SWITCH_INIT(upper_LimitSwitch_cb);
     LOWER_LIMIT_SWITCH_INIT(lower_LimitSwitch_cb);
 
-    // MOVE TO LOWER POSITION
-    if (LOWER_LIMIT_SWITCH_IS_TRIGGERED())
-    {
-        PTZ_STOP()
-        _ptz_direction = PTZ_DIR_STOPPED;
-    }
-    else
-    {
-        PTZ_MOVE_DOWN();
-        _ptz_direction = PTZ_DIR_MOVING_DOWN;
-    }
-
+    PTZ_STOP()
+    _ptz_direction = PTZ_DIR_STOPPED;
+    /*
+        // MOVE TO LOWER POSITION
+        if (LOWER_LIMIT_SWITCH_IS_TRIGGERED())
+        {
+            PTZ_STOP()
+            _ptz_direction = PTZ_DIR_STOPPED;
+        }
+        else
+        {
+            PTZ_MOVE_DOWN();
+            _ptz_direction = PTZ_DIR_MOVING_DOWN;
+        }
+    */
     // TIMER POSITION 100ms
     _timer_position.begin(timer_position_cb, 100 * 1000UL);
 
