@@ -56,16 +56,16 @@ void timer_cb()
     switch (_circulin_status)
     {
     case LOAD_STATUS_ON:
-        digitalWrite(RELAY_1_PIN, 1);
-        digitalWrite(RELAY_2_PIN, 1);
+        digitalWrite(RELAY_6_PIN, 1);
+        digitalWrite(RELAY_5_PIN, 1);
         break;
     case LOAD_STATUS_OFF:
-        digitalWrite(RELAY_1_PIN, 0);
-        digitalWrite(RELAY_2_PIN, 0);
+        digitalWrite(RELAY_6_PIN, 0);
+        digitalWrite(RELAY_5_PIN, 0);
         break;
     default:
-        digitalWrite(RELAY_1_PIN, 1);
-        digitalToggle(RELAY_2_PIN);
+        digitalWrite(RELAY_6_PIN, 1);
+        digitalToggle(RELAY_5_PIN);
         break;
     }
 
@@ -139,8 +139,8 @@ void timer_cb()
 void load_init()
 {
     // circulin
-    // pinMode(RELAY_1_PIN, OUTPUT); // en
-    // pinMode(RELAY_2_PIN, OUTPUT); // sta
+    pinMode(RELAY_6_PIN, OUTPUT); // en
+    pinMode(RELAY_5_PIN, OUTPUT); // sta
 
     // pilot 1
     // pinMode(RELAY_3_PIN, OUTPUT);
@@ -214,9 +214,11 @@ void load_toogling_led()
 
 void load_TurnOn_light()
 {
-    _light_status = LOAD_STATUS_ON;
+    //_light_status = LOAD_STATUS_ON;
+    _circulin_status = LOAD_STATUS_ON;
 }
 void load_TurnOff_light()
 {
-    _light_status = LOAD_STATUS_OFF;
+    //_light_status = LOAD_STATUS_OFF;
+    _circulin_status = LOAD_STATUS_TOOGLING;
 }
