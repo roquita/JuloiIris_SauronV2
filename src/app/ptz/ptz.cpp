@@ -132,6 +132,9 @@ void ptz_init()
         }
     */
     DEBUG_PRINTLN(F("PTZ INIT DONE"));
+
+    ptz_MoveUp_by_pulse();
+    ptz_MoveUp_by_pulse();
 }
 void ptz_MoveUp_by_pulse()
 {
