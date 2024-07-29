@@ -6,12 +6,13 @@ void setup()
   DEBUG_PRINTLN(F("SETUP IN"));
   screen_init();
   interval_init();
-  //load_init();
+  load_init();
   distance_init();
   temphumi_init();
   wheel_init();
   ptz_init();
 
+  load_toogling_led();
 
  // wheel_set_MaxSpeed(90);
  // wheel_move_forward(1.0);
