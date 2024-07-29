@@ -9,6 +9,7 @@ load_status_t _circulin_status = LOAD_STATUS_OFF;
 load_status_t _PilotRed_status = LOAD_STATUS_OFF;
 load_status_t _PilotYellow_status = LOAD_STATUS_OFF;
 load_status_t _led_status = LOAD_STATUS_OFF;
+load_status_t _light_status = LOAD_STATUS_OFF;
 
 int _circulin_counter = 0;
 int _PilotRed_counter = 0;
@@ -112,6 +113,27 @@ void timer_cb()
         digitalToggle(BUILTIN_LED_PIN);
         break;
     }
+
+    // light
+    switch (_light_status)
+    {
+    case LOAD_STATUS_ON:
+        digitalWrite(RELAY_2_PIN, HIGH);
+        digitalWrite(RELAY_3_PIN, HIGH);
+        digitalWrite(RELAY_4_PIN, HIGH);
+        break;
+    case LOAD_STATUS_OFF:
+        digitalWrite(RELAY_2_PIN, LOW);
+        digitalWrite(RELAY_3_PIN, LOW);
+        digitalWrite(RELAY_4_PIN, LOW);
+        break;
+    default:
+        digitalToggle(RELAY_2_PIN);
+        digitalToggle(RELAY_3_PIN);
+        digitalToggle(RELAY_4_PIN);
+
+        break;
+    }
 }
 
 void load_init()
@@ -192,13 +214,9 @@ void load_toogling_led()
 
 void load_TurnOn_light()
 {
-    digitalWrite(RELAY_2_PIN, HIGH);
-    digitalWrite(RELAY_3_PIN, HIGH);
-    digitalWrite(RELAY_4_PIN, HIGH);
+    _light_status = LOAD_STATUS_ON;
 }
 void load_TurnOff_light()
 {
-    digitalWrite(RELAY_2_PIN, LOW);
-    digitalWrite(RELAY_3_PIN, LOW);
-    digitalWrite(RELAY_4_PIN, LOW);
+    _light_status = LOAD_STATUS_OFF;
 }
