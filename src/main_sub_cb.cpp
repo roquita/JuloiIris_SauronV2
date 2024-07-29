@@ -30,13 +30,13 @@ void SUB_Tower_app_cb(int method, int value)
     switch (method)
     {
     case 1: // BY PULSE
-        // value == 1 ? ptz_MoveUp_by_pulse() : ptz_MoveDown_by_pulse();
+        value == 1 ? ptz_MoveUp_by_pulse() : ptz_MoveDown_by_pulse();
         break;
     case 2: // BY LIMIT
-        // value == 1 ? ptz_MoveUp_by_limit() : ptz_MoveDown_by_limit();
+        value == 1 ? ptz_MoveUp_by_limit() : ptz_MoveDown_by_limit();
         break;
     default: // BY POSITION
-        // ptz_move_by_position(value);
+        ptz_move_by_position(value);
         break;
     }
 }

@@ -17,11 +17,11 @@ bool PUB_Sensor_app_cb(char *buffer, int *size)
                        distance_get_RightMiddle_mm() / 10, distance_get_RightBack_mm() / 10,
                        distance_get_LeftFront_mm() / 10, distance_get_LeftMiddle_mm() / 10,
                        distance_get_LeftBack_mm() / 10, distance_get_BackRight_mm() / 10,
-                       distance_get_BackLeft_mm() / 10, 
-                       0, wheel_FrontLeft_get_speed(), 0, 0, 0, 
-                       0, 0, 
-                       (int)temphumi_get_temperature(), (int)temphumi_get_humidity(), 
+                       distance_get_BackLeft_mm() / 10,
+                       0, wheel_FrontLeft_get_speed(), 0, 0, 0,
                        0, 0,
+                       (int)temphumi_get_temperature(), (int)temphumi_get_humidity(),
+                       ptz_uls_pressed() == true ? 1 : 0, ptz_lls_pressed() == true ? 1 : 0,
                        wheel_get_MaxSpeed());
   bool parsing_success = (bytes > 0) || (bytes < (*size));
   *size = bytes + 1;

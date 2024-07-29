@@ -120,13 +120,14 @@ void ptz_init()
     // TIMER POSITION 100ms
     _timer_position.begin(timer_position_cb, 100 * 1000UL);
 
-    // wait until lower limit switch gets triggered
-    while (!LOWER_LIMIT_SWITCH_IS_TRIGGERED())
-    {
-        DEBUG_PRINTLN(F("PTZ ..."));
-        delay(1000);
-    }
-
+    /*
+        // wait until lower limit switch gets triggered
+        while (!LOWER_LIMIT_SWITCH_IS_TRIGGERED())
+        {
+            DEBUG_PRINTLN(F("PTZ ..."));
+            delay(1000);
+        }
+    */
     DEBUG_PRINTLN(F("PTZ INIT DONE"));
 }
 void ptz_MoveUp_by_pulse()
@@ -226,4 +227,13 @@ void ptz_stop()
 int ptz_get_position()
 {
     return _ptz_position;
+}
+
+bool ptz_uls_pressed()
+{
+    return UPPER_LIMIT_SWITCH_IS_TRIGGERED();
+}
+bool ptz_lls_pressed()
+{
+    return LOWER_LIMIT_SWITCH_IS_TRIGGERED();
 }
