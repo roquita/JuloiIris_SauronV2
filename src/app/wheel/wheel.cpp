@@ -70,22 +70,28 @@
 #define WHEEL_FRONT_LEFT_GET_SPEED() BLD300B_driver2_get_duty()
 
 int _wheel_MaxSpeed = 0;
+wheel_at_start_cb_t _wheel_at_start_cb = NULL;
+wheel_at_stop_cb_t _wheel_at_stop_cb = NULL;
 
-void wheel_init()
+void wheel_init(wheel_at_start_cb_t wheel_at_start_cb, wheel_at_stop_cb_t wheel_at_stop_cb)
 {
     _wheel_MaxSpeed = 0;
     WHEEL_FRONT_RIGHT_INIT();
     WHEEL_FRONT_LEFT_INIT();
     WHEEL_BACK_RIGHT_INIT();
     WHEEL_BACK_LEFT_INIT();
+
+    _wheel_at_start_cb = wheel_at_start_cb;
+    _wheel_at_stop_cb = wheel_at_stop_cb;
 }
 void wheel_stop()
 {
-    //_wheel_MaxSpeed = 0;
     WHEEL_FRONT_RIGHT_STOP();
     WHEEL_FRONT_LEFT_STOP();
     WHEEL_BACK_RIGHT_STOP();
     WHEEL_BACK_LEFT_STOP();
+
+    _wheel_at_stop_cb();
 }
 void wheel_move_forward(float speed)
 {
@@ -93,6 +99,8 @@ void wheel_move_forward(float speed)
     WHEEL_FRONT_LEFT_MOVE_FORWARD((int)(speed * _wheel_MaxSpeed));
     WHEEL_BACK_RIGHT_MOVE_FORWARD((int)(speed * _wheel_MaxSpeed));
     WHEEL_BACK_LEFT_MOVE_FORWARD((int)(speed * _wheel_MaxSpeed));
+
+    _wheel_at_start_cb();
 }
 void wheel_move_backward(float speed)
 {
@@ -100,6 +108,8 @@ void wheel_move_backward(float speed)
     WHEEL_FRONT_LEFT_MOVE_BACKWARD((int)(speed * _wheel_MaxSpeed));
     WHEEL_BACK_RIGHT_MOVE_BACKWARD((int)(speed * _wheel_MaxSpeed));
     WHEEL_BACK_LEFT_MOVE_BACKWARD((int)(speed * _wheel_MaxSpeed));
+
+    _wheel_at_start_cb();
 }
 void wheel_turn_right(float speed)
 {
@@ -107,6 +117,8 @@ void wheel_turn_right(float speed)
     WHEEL_FRONT_LEFT_MOVE_FORWARD((int)(speed * _wheel_MaxSpeed));
     WHEEL_BACK_RIGHT_MOVE_BACKWARD((int)(speed * _wheel_MaxSpeed));
     WHEEL_BACK_LEFT_MOVE_FORWARD((int)(speed * _wheel_MaxSpeed));
+
+    _wheel_at_start_cb();
 }
 void wheel_turn_left(float speed)
 {
@@ -114,6 +126,8 @@ void wheel_turn_left(float speed)
     WHEEL_FRONT_LEFT_MOVE_BACKWARD((int)(speed * _wheel_MaxSpeed));
     WHEEL_BACK_RIGHT_MOVE_FORWARD((int)(speed * _wheel_MaxSpeed));
     WHEEL_BACK_LEFT_MOVE_BACKWARD((int)(speed * _wheel_MaxSpeed));
+
+    _wheel_at_start_cb();
 }
 void wheel_set_MaxSpeed(int MaxSpeed) // 0-100%
 {

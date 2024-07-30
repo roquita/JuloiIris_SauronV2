@@ -29,3 +29,7 @@ void SUB_Battery_app_cb(int BatteryLevel);
 // ros pub callbacks
 bool PUB_Sensor_app_cb(char *buffer, int *size);
 bool PUB_AlertSauron_app_cb(char *buffer, int *size);
+
+// MOTOR callbacks
+void MOTOR_at_start_cb();
+void MOTOR_at_stop_cb();

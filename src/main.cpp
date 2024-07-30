@@ -10,8 +10,8 @@ void setup()
   load_init();
   distance_init();
   temphumi_init();
-  wheel_init();
-  ptz_init();
+  wheel_init(MOTOR_at_start_cb, MOTOR_at_stop_cb);
+  ptz_init(MOTOR_at_start_cb, MOTOR_at_stop_cb);
 
   ros_init(SUB_Locomotion_app_cb,
            SUB_MaxVelocity_app_cb,
@@ -25,7 +25,6 @@ void setup()
   DEBUG_PRINTLN(F("SETUP OUT"));
 
   load_toogling_led();
-
 }
 
 void loop()

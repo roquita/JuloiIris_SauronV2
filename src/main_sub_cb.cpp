@@ -64,10 +64,10 @@ void SUB_Load_app_cb(int LoadCode)
     switch (LoadCode)
     {
     case 0: //  APAGAR LUCES
-         load_TurnOff_light();
+        load_TurnOff_light();
         break;
     default: // ENCENDER LUCES
-         load_TurnOn_light();
+        load_TurnOn_light();
         break;
     }
 }
