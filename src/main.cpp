@@ -24,6 +24,25 @@ void setup()
   DEBUG_PRINTLN(F("SETUP OUT"));
 
   load_toogling_led();
+
+  while (1)
+  {
+    digitalWrite(RELAY_5_PIN, 1);
+    digitalWrite(RELAY_6_PIN, 1);
+    delay(5000);
+    digitalWrite(RELAY_5_PIN, 0);
+    digitalWrite(RELAY_6_PIN, 0);
+    delay(5000);
+    for (int i = 0; i < 10; i++)
+    {
+      digitalWrite(RELAY_5_PIN, 1);
+      digitalWrite(RELAY_6_PIN, 1);
+      delay(500);
+      digitalWrite(RELAY_5_PIN, 1);
+      digitalWrite(RELAY_6_PIN, 0);
+      delay(900);
+    }
+  }
 }
 
 void loop()
