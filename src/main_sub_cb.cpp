@@ -46,8 +46,8 @@ void SUB_Alert_app_cb(int AlertCode)
     {
     case 1: // NO INTERNET
         wheel_stop();
-        // ptz_stop();
-        // load_Toogling_1s_5s_PilotRed();
+        ptz_stop();
+        load_Toogling_1s_5s_PilotRed();
         screen_queue_NoInternet_Notification();
         break;
     case 2: // SI INTERNET
