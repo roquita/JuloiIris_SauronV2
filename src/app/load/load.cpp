@@ -215,10 +215,10 @@ void load_toogling_led()
 void load_TurnOn_light()
 {
     //_light_status = LOAD_STATUS_ON;
-    _circulin_status = LOAD_STATUS_ON;
+   // _circulin_status = LOAD_STATUS_ON;
 }
 void load_TurnOff_light()
 {
     //_light_status = LOAD_STATUS_OFF;
-    _circulin_status = LOAD_STATUS_TOOGLING;
+   // _circulin_status = LOAD_STATUS_TOOGLING;
 }
