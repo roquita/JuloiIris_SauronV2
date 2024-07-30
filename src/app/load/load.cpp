@@ -56,17 +56,25 @@ void timer_cb()
     switch (_circulin_status)
     {
     case LOAD_STATUS_ON:
+        _circulin_counter = 0;
         digitalWrite(RELAY_5_PIN, 0);
         digitalWrite(RELAY_6_PIN, 1);
         break;
     case LOAD_STATUS_OFF:
-        digitalWrite(RELAY_5_PIN, 0);
-        digitalWrite(RELAY_6_PIN, 0);
+        _circulin_counter = 0;
+        digitalWrite(RELAY_5_PIN, 1);
+        digitalWrite(RELAY_6_PIN, 1);
         break;
     default:
+    {
+        _circulin_counter = (_circulin_counter + 1) % 3;
         digitalWrite(RELAY_5_PIN, 0);
-        digitalToggle(RELAY_6_PIN);
-        break;
+        if (_circulin_counter == 0)
+            digitalWrite(RELAY_6_PIN, 1);
+        if (_circulin_counter == 2)
+            digitalWrite(RELAY_6_PIN, 0);
+    }
+    break;
     }
 
     // pilot Red
