@@ -17,7 +17,7 @@ void screen_init()
 {
     nextion_init();
 
-    screen_goto_LoadingPage();
+    screen_goto_MainPage();
 
     // SENSORS
 
@@ -55,10 +55,6 @@ void screen_init()
     screen_print_Notification4();
     screen_print_Notification5();
     screen_print_Notification6();
-
-    //screen_goto_MainPage();
-    SCREEN_DEBUG("DEBUGGING MODE");
-    //nextion_set_txt("t9", "456789");
 }
 void screen_print_DistanceFront(int cm)
 {
@@ -411,4 +407,3 @@ void screen_goto_LoadingPage()
     nextion_select();
     nextion_set_page(SCREEN_PAGE_LOADING);
 }
-

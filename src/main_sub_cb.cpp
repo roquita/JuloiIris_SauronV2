@@ -51,6 +51,7 @@ void SUB_Alert_app_cb(int AlertCode)
         screen_queue_NoInternet_Notification();
         break;
     case 2: // SI INTERNET
+        load_TurnOff_PilotRed();
         screen_goto_MainPage();
         screen_queue_YesInternet_Notificacion();
         break;
