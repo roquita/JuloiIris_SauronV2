@@ -98,14 +98,22 @@ void timer_cb()
     switch (_PilotYellow_status)
     {
     case LOAD_STATUS_ON:
-        digitalWrite(RELAY_4_PIN, 1);
+        _PilotYellow_counter = 0;
+        digitalWrite(RELAY_8_PIN, 1);
         break;
     case LOAD_STATUS_OFF:
-        digitalWrite(RELAY_4_PIN, 0);
+        _PilotYellow_counter = 0;
+        digitalWrite(RELAY_8_PIN, 0);
         break;
     default:
-        digitalToggle(RELAY_4_PIN);
+    {
+        if (_PilotYellow_counter == 0)
+            digitalWrite(RELAY_8_PIN, 1);
+        if (_PilotYellow_counter == 3)
+            digitalWrite(RELAY_8_PIN, 0);
+        _PilotYellow_counter = (_PilotYellow_counter + 1) % 6;
         break;
+    }
     }
 
     // led
@@ -152,8 +160,8 @@ void load_init()
     digitalWrite(RELAY_5_PIN, 0);
     digitalWrite(RELAY_6_PIN, 0);
 
-    // pilot 1
-    // pinMode(RELAY_3_PIN, OUTPUT);
+    // pilot yellow
+    pinMode(RELAY_8_PIN, OUTPUT);
 
     // pilot 2
     // pinMode(RELAY_4_PIN, OUTPUT);

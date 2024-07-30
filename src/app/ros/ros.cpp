@@ -14,6 +14,10 @@
 #include <std_msgs/msg/u_int32.h>
 #include <geometry_msgs/msg/twist.h>
 
+// ros callbacks
+Ros_at_transport_disconnected_t _Ros_at_transport_disconnected = NULL;
+Ros_at_transport_conencted_t _Ros_at_transport_conencted = NULL;
+
 // general
 rcl_allocator_t _allocator;
 rclc_support_t _support;
@@ -92,7 +96,7 @@ void SUB_MsgToSauron_cb(const void *msgin)
 
         // user callback
         if (_MaxVelocity_app_cb)
-            _MaxVelocity_app_cb( MaxVelocity);
+            _MaxVelocity_app_cb(MaxVelocity);
     }
     else if (type == 2)
     {
@@ -253,7 +257,9 @@ void PUB_AlertSauron_cb(rcl_timer_t *timer, int64_t last_call_time)
     }
 }
 
-void ros_init(Locomotion_app_cb_t Locomotion_app_cb,
+void ros_init(Ros_at_transport_disconnected_t Ros_at_transport_disconnected,
+              Ros_at_transport_conencted_t Ros_at_transport_conencted,
+              Locomotion_app_cb_t Locomotion_app_cb,
               MaxVelocity_app_cb_t MaxVelocity_app_cb,
               Tower_app_cb_t Tower_app_cb,
               Alert_app_cb_t Alert_app_cb,
@@ -262,6 +268,10 @@ void ros_init(Locomotion_app_cb_t Locomotion_app_cb,
               Sensor_app_cb_t Sensor_app_cb,
               AlertSauron_app_cb_t AlertSauron_app_cb)
 {
+    // set app callbacks
+    _Ros_at_transport_disconnected = Ros_at_transport_disconnected;
+    _Ros_at_transport_conencted = Ros_at_transport_conencted;
+
     // set app callbacks
     _Locomotion_app_cb = Locomotion_app_cb;
     _MaxVelocity_app_cb = MaxVelocity_app_cb;
@@ -276,11 +286,15 @@ void ros_init(Locomotion_app_cb_t Locomotion_app_cb,
     Serial.begin(115200);
     set_microros_serial_transports(Serial);
 
+    _Ros_at_transport_disconnected();
+
     while (Serial.dtr() == 0)
     {
         DEBUG_PRINTLN(F("Esperando conexion a JETSON..."));
         delay(1000);
     }
+
+    _Ros_at_transport_conencted();
 
     // ros general
     _allocator = rcl_get_default_allocator();

@@ -13,7 +13,9 @@ void setup()
   wheel_init(MOTOR_at_start_cb, MOTOR_at_stop_cb);
   ptz_init(MOTOR_at_start_cb, MOTOR_at_stop_cb);
 
-  ros_init(SUB_Locomotion_app_cb,
+  ros_init(ROS_at_transport_disconnected_cb,
+           ROS_at_transport_connected_cb,
+           SUB_Locomotion_app_cb,
            SUB_MaxVelocity_app_cb,
            SUB_Tower_app_cb,
            SUB_Alert_app_cb,

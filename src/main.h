@@ -33,3 +33,7 @@ bool PUB_AlertSauron_app_cb(char *buffer, int *size);
 // MOTOR callbacks
 void MOTOR_at_start_cb();
 void MOTOR_at_stop_cb();
+
+// ros callbacks
+void ROS_at_transport_disconnected_cb();
+void ROS_at_transport_connected_cb();
