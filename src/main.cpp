@@ -38,10 +38,12 @@ void setup()
       digitalWrite(RELAY_5_PIN, 1);
       digitalWrite(RELAY_6_PIN, 1);
       delay(500);
-      digitalWrite(RELAY_5_PIN, 1);
-      digitalWrite(RELAY_6_PIN, 0);
+      digitalWrite(RELAY_5_PIN, 0);
+      digitalWrite(RELAY_6_PIN, 1);
       delay(900);
     }
+    digitalWrite(RELAY_5_PIN, 0);
+    digitalWrite(RELAY_6_PIN, 0);
   }
 }
 
