@@ -26,31 +26,6 @@ void setup()
 
   load_toogling_led();
 
-  while (1)
-  {
-    /*
-    digitalWrite(RELAY_5_PIN, 1);
-    digitalWrite(RELAY_6_PIN, 1);
-    delay(5000);
-    digitalWrite(RELAY_5_PIN, 0);
-    digitalWrite(RELAY_6_PIN, 0);
-    delay(5000);
-    */
-    digitalWrite(RELAY_5_PIN, 1);
-    digitalWrite(RELAY_6_PIN, 1);
-    for (int i = 0; i < 10; i++)
-    {
-      //digitalWrite(RELAY_5_PIN, 1);
-      //digitalWrite(RELAY_6_PIN, 1);
-      digitalWrite(RELAY_6_PIN, !digitalRead(RELAY_6_PIN));
-      delay(500);
-      //digitalWrite(RELAY_5_PIN, 1);
-      //digitalWrite(RELAY_6_PIN, 0);
-      //delay(900);
-    }
-    digitalWrite(RELAY_5_PIN, 0);
-    digitalWrite(RELAY_6_PIN, 0);
-  }
 }
 
 void loop()
