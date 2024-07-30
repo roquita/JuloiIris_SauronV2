@@ -56,16 +56,16 @@ void timer_cb()
     switch (_circulin_status)
     {
     case LOAD_STATUS_ON:
-        digitalWrite(RELAY_6_PIN, 1);
         digitalWrite(RELAY_5_PIN, 1);
+        digitalWrite(RELAY_6_PIN, 1);
         break;
     case LOAD_STATUS_OFF:
-        digitalWrite(RELAY_6_PIN, 0);
         digitalWrite(RELAY_5_PIN, 0);
+        digitalWrite(RELAY_6_PIN, 0);
         break;
     default:
-        digitalWrite(RELAY_6_PIN, 1);
-        digitalToggle(RELAY_5_PIN);
+        digitalWrite(RELAY_5_PIN, 1);
+        digitalToggle(RELAY_6_PIN);
         break;
     }
 
@@ -139,8 +139,8 @@ void timer_cb()
 void load_init()
 {
     // circulin
-    pinMode(RELAY_6_PIN, OUTPUT); // en
-    pinMode(RELAY_5_PIN, OUTPUT); // sta
+    pinMode(RELAY_5_PIN, OUTPUT); // en
+    pinMode(RELAY_6_PIN, OUTPUT); // sta
 
     // pilot 1
     // pinMode(RELAY_3_PIN, OUTPUT);
