@@ -10,8 +10,8 @@ void setup()
   load_init();
   distance_init();
   temphumi_init();
-  wheel_init(MOTOR_at_start_cb, MOTOR_at_stop_cb);
-  ptz_init(MOTOR_at_start_cb, MOTOR_at_stop_cb);
+  wheel_init(wheel_at_start_cb, wheel_at_stop_cb);
+  ptz_init(ptz_at_start_cb, ptz_at_stop_cb);
 
   ros_init(ROS_at_transport_disconnected_cb,
            ROS_at_transport_connected_cb,

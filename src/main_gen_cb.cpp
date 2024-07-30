@@ -1,11 +1,21 @@
 #include "main.h"
 
-void MOTOR_at_start_cb()
+void wheel_at_start_cb()
 {
     load_toogling_circulin();
 }
 
-void MOTOR_at_stop_cb()
+void wheel_at_stop_cb()
+{
+    load_TurnOff_circulin();
+}
+
+void ptz_at_start_cb()
+{
+    load_toogling_circulin();
+}
+
+void ptz_at_stop_cb()
 {
     load_TurnOff_circulin();
 }

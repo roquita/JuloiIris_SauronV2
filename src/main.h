@@ -31,9 +31,9 @@ bool PUB_Sensor_app_cb(char *buffer, int *size);
 bool PUB_AlertSauron_app_cb(char *buffer, int *size);
 
 // MOTOR callbacks
-void MOTOR_at_start_cb();
-void MOTOR_at_stop_cb();
-
-// ros callbacks
+void wheel_at_start_cb();
+void wheel_at_stop_cb();
+void ptz_at_start_cb();
+void ptz_at_stop_cb();
 void ROS_at_transport_disconnected_cb();
 void ROS_at_transport_connected_cb();
