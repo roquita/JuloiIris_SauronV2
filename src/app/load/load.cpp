@@ -64,8 +64,8 @@ void timer_cb()
         digitalWrite(RELAY_6_PIN, 1);
         break;
     default:
-        digitalWrite(RELAY_6_PIN, 1);
-        digitalToggle(RELAY_5_PIN);
+        digitalWrite(RELAY_5_PIN, 0);
+        digitalToggle(RELAY_6_PIN);
         break;
     }
 
