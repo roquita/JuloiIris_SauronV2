@@ -5,13 +5,15 @@
 
 static char buffer[30];
 
-uint8_t xor8(uint8_t *data, size_t length) {
+uint8_t xor8(uint8_t *data, size_t length)
+{
     uint8_t checksum = 0;
-    
-    for (size_t i = 0; i < length; i++) {
+
+    for (size_t i = 0; i < length; i++)
+    {
         checksum ^= data[i];
     }
-    
+
     return checksum;
 }
 
@@ -54,6 +56,49 @@ void xkc_kl200_select(xkc_kl200_device_t device)
 }
 // 62 33 09 FF FF 00 00 00 58  request data
 // 62 33 09 00 00 00 6D 66 53  answer for request data
+void xkc_kl200_request_data()
+{   
+    // clean transport buffer
+    UARTMUX_flush();
+    // clean local buffer
+    memset(buffer, 0, sizeof(buffer));
+    // request
+    UARTMUX_write(0x62);
+    UARTMUX_write(0x33);
+    UARTMUX_write(0x09);
+    UARTMUX_write(0xff);
+    UARTMUX_write(0xff);
+    UARTMUX_write(0x00);
+    UARTMUX_write(0x00);
+    UARTMUX_write(0x00);
+    UARTMUX_write(0x58);
+}
+bool xkc_kl200_available()
+{
+    return (UARTMUX_available() >= 9);
+}
+bool xkc_kl200_read(int *data)
+{
+    bool timeout = UARTMUX_read((uint8_t *)buffer, 9) == false;
+    if (timeout)
+    {
+        DEBUG_PRINTLN(F("xkc_kl200_get_data 01"));
+        *data = 0;
+        return false;
+    }
+    // detect xor8 failure
+    uint8_t code = xor8((uint8_t *)buffer, 8);
+    bool xor_valid = (code == buffer[8]);
+    if (!xor_valid)
+    {
+        DEBUG_PRINTLN(F("xkc_kl200_get_data 02"));
+        *data = 0;
+        return false;
+    }
+    // get reading
+    *data = (((uint16_t)buffer[5]) << 8) + buffer[6];
+    return true;
+}
 bool xkc_kl200_get_data(int *data)
 {
     // clean buffer

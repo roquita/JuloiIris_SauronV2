@@ -35,6 +35,7 @@ void loop()
   if (interval_100ms_triggered())
   {
     ros_loop();
+    distance_loop();
   }
 
   if (interval_500ms_triggered())
@@ -43,9 +44,11 @@ void loop()
 
   if (interval_1000ms_triggered())
   {
-    distance_update();
     temphumi_update();
+  }
 
+  if (interval_2000ms_triggered())
+  {
     screen_print_DistanceFront(distance_get_Front_mm() / 10);
     screen_print_DistanceRightFront(distance_get_RightFront_mm() / 10);
     screen_print_DistanceRightMiddle(distance_get_RightMiddle_mm() / 10);
@@ -58,10 +61,6 @@ void loop()
 
     screen_print_EnvironmentTemperature(temphumi_get_temperature());
     screen_print_EnvironmentHumidity(temphumi_get_humidity());
-  }
-
-  if (interval_2000ms_triggered())
-  {
   }
 
   if (interval_5000ms_triggered())

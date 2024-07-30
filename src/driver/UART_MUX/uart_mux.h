@@ -23,5 +23,7 @@ typedef enum
 void UARTMUX_init();
 void UARTMUX_print(char *str);
 void UARTMUX_write(int byte);
-bool UARTMUX_read(uint8_t* data, int n);
+bool UARTMUX_read(uint8_t *data, int n);
+void UARTMUX_flush();
+int UARTMUX_available();
 void UARTMUX_select_channel(mux_channel_t channel);

@@ -19,4 +19,8 @@ typedef enum{
 
 void xkc_kl200_init();
 void xkc_kl200_select(xkc_kl200_device_t device);
+void xkc_kl200_request_data();
+void xkc_kl200_request_data();
+bool xkc_kl200_available();
+bool xkc_kl200_read(int *data);
 bool xkc_kl200_get_data(int *data);

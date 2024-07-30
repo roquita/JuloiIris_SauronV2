@@ -15,9 +15,9 @@ void UARTMUX_init()
     initialized = true;
 
     Serial8.begin(2400);
-    //Serial8.setTimeout(1000);
     Serial8.setTimeout(0);
-    
+    // Serial8.setTimeout(100);
+
     pinMode(MUX_S3_PIN, OUTPUT);
     pinMode(MUX_S2_PIN, OUTPUT);
     pinMode(MUX_S1_PIN, OUTPUT);
@@ -36,7 +36,16 @@ void UARTMUX_write(int byte)
 bool UARTMUX_read(uint8_t *data, int n)
 {
     int bytes = Serial8.readBytes(data, n);
+
     return bytes == n;
+}
+void UARTMUX_flush()
+{
+    Serial8.flush();
+}
+int UARTMUX_available()
+{
+    return Serial8.available();
 }
 void UARTMUX_select_channel(mux_channel_t channel)
 {

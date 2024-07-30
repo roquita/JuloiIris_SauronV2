@@ -1,7 +1,7 @@
 #pragma once
 
 void distance_init();
-void distance_update();
+void distance_loop();
 int distance_get_Front_mm();
 int distance_get_RightFront_mm();
 int distance_get_RightMiddle_mm();
