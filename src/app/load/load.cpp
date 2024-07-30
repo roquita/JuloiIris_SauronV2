@@ -63,16 +63,16 @@ void timer_cb()
     case LOAD_STATUS_OFF:
         _circulin_counter = 0;
         digitalWrite(RELAY_5_PIN, 1);
-        digitalWrite(RELAY_6_PIN, 1);
+        digitalWrite(RELAY_6_PIN, 0);
         break;
     default:
     {
-        _circulin_counter = (_circulin_counter + 1) % 3;
         digitalWrite(RELAY_5_PIN, 0);
         if (_circulin_counter == 0)
             digitalWrite(RELAY_6_PIN, 1);
-        if (_circulin_counter == 2)
+        if (_circulin_counter == 1)
             digitalWrite(RELAY_6_PIN, 0);
+        _circulin_counter = (_circulin_counter + 1) % 3;
     }
     break;
     }
@@ -150,7 +150,7 @@ void load_init()
     pinMode(RELAY_5_PIN, OUTPUT); // en
     pinMode(RELAY_6_PIN, OUTPUT); // sta
     digitalWrite(RELAY_5_PIN, 1);
-    digitalWrite(RELAY_6_PIN, 1);
+    digitalWrite(RELAY_6_PIN, 0);
 
     // pilot 1
     // pinMode(RELAY_3_PIN, OUTPUT);
@@ -166,7 +166,7 @@ void load_init()
     pinMode(RELAY_3_PIN, OUTPUT);
     pinMode(RELAY_4_PIN, OUTPUT);
 
-    timer.begin(timer_cb, 500000UL);
+    timer.begin(timer_cb, 200000UL);
 }
 void load_TurnOn_circulin()
 {
