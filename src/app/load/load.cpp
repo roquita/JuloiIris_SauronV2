@@ -156,7 +156,7 @@ void load_init()
     pinMode(RELAY_3_PIN, OUTPUT);
     pinMode(RELAY_4_PIN, OUTPUT);
 
-    timer.begin(timer_cb, 500000UL);
+   // timer.begin(timer_cb, 500000UL);
 }
 void load_TurnOn_circulin()
 {
