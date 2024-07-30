@@ -81,16 +81,16 @@ void timer_cb()
     switch (_PilotRed_status)
     {
     case LOAD_STATUS_ON:
-        digitalWrite(RELAY_3_PIN, 1);
+        digitalWrite(RELAY_7_PIN, 1);
         break;
     case LOAD_STATUS_OFF:
-        digitalWrite(RELAY_3_PIN, 0);
+        digitalWrite(RELAY_7_PIN, 0);
         break;
     case LOAD_STATUS_TOOGLING:
-        digitalToggle(RELAY_3_PIN);
+        digitalToggle(RELAY_7_PIN);
         break;
     default:
-        digitalToogle_xs_5s(RELAY_3_PIN, 1, &_PilotRed_counter, &_PilotRed_pulses);
+        digitalToogle_xs_5s(RELAY_7_PIN, 1, &_PilotRed_counter, &_PilotRed_pulses);
         break;
     }
 
@@ -160,11 +160,11 @@ void load_init()
     digitalWrite(RELAY_5_PIN, 0);
     digitalWrite(RELAY_6_PIN, 0);
 
-    // pilot yellow
+    // pilot amarillo
     pinMode(RELAY_8_PIN, OUTPUT);
 
-    // pilot 2
-    // pinMode(RELAY_4_PIN, OUTPUT);
+    // pilot rojo
+     pinMode(RELAY_7_PIN, OUTPUT);
 
     // led
     pinMode(BUILTIN_LED_PIN, OUTPUT);
