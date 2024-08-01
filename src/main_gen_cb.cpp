@@ -23,6 +23,7 @@ void ptz_at_stop_cb()
 void ROS_at_transport_disconnected_cb()
 {
     load_toogling_PilotYellow();
+    wheel_stop();
 }
 
 void ROS_at_transport_connected_cb()

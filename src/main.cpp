@@ -27,6 +27,7 @@ void setup()
   DEBUG_PRINTLN(F("SETUP OUT"));
 
   load_toogling_led();
+  screen_queue_SetupDone_Notificacion();
 }
 
 void loop()
@@ -35,7 +36,7 @@ void loop()
   if (interval_100ms_triggered())
   {
     ros_loop();
-    distance_loop();
+   // distance_loop();
   }
 
   if (interval_500ms_triggered())
@@ -49,15 +50,15 @@ void loop()
 
   if (interval_2000ms_triggered())
   {
-    screen_print_DistanceFront(distance_get_Front_mm() / 10);
-    screen_print_DistanceRightFront(distance_get_RightFront_mm() / 10);
-    screen_print_DistanceRightMiddle(distance_get_RightMiddle_mm() / 10);
-    screen_print_DistanceRightBack(distance_get_RightBack_mm() / 10);
-    screen_print_DistanceLeftFront(distance_get_LeftFront_mm() / 10);
-    screen_print_DistanceLeftMiddle(distance_get_LeftMiddle_mm() / 10);
-    screen_print_DistanceLeftBack(distance_get_LeftBack_mm() / 10);
-    screen_print_DistanceBackRight(distance_get_BackRight_mm() / 10);
-    screen_print_DistanceBackLeft(distance_get_BackLeft_mm() / 10);
+    screen_print_DistanceFront(distance_get_Front_mm() );
+    screen_print_DistanceRightFront(distance_get_RightFront_mm() );
+    screen_print_DistanceRightMiddle(distance_get_RightMiddle_mm() );
+    screen_print_DistanceRightBack(distance_get_RightBack_mm() );
+    screen_print_DistanceLeftFront(distance_get_LeftFront_mm() );
+    screen_print_DistanceLeftMiddle(distance_get_LeftMiddle_mm() );
+    screen_print_DistanceLeftBack(distance_get_LeftBack_mm() );
+    screen_print_DistanceBackRight(distance_get_BackRight_mm() );
+    screen_print_DistanceBackLeft(distance_get_BackLeft_mm() );
 
     screen_print_EnvironmentTemperature(temphumi_get_temperature());
     screen_print_EnvironmentHumidity(temphumi_get_humidity());

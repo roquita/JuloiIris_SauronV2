@@ -29,7 +29,7 @@ void distance_loop()
         bool timeout_triggered = false;
         bool data_readed = false;
 
-        if (_timeout >= 2)
+        if (_timeout >= 1)
         {
             timeout_triggered = true;
         }
@@ -83,7 +83,7 @@ void distance_loop()
             switch (_sensor_target)
             {
             case 6:
-                _state_machine_counter = 1;
+                _state_machine_counter = 0;//1;
                 break;
             case 9:
                 _state_machine_counter = 2;

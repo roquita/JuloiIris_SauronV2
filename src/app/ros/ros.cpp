@@ -333,11 +333,49 @@ void ros_loop()
         rcl_publisher_fini(&_pAlertSauron, &_node);
         rcl_subscription_fini(&_sMsgToSauron, &_node);
 
-        rcl_node_fini(&_node);
+        rcl_timer_fini(&_tAlertSauron);
+        rcl_timer_fini(&_tSensor);
 
-        DEBUG_PRINTLN(F("REBOOTING: PING FAILED."));
-        delay(1000);
-        SCB_AIRCR = 0x05FA0004;
+        rcl_node_fini(&_node);
+        rclc_support_fini(&_support);
+
+        Serial.end();
+
+        Serial.begin(115200);
+        set_microros_serial_transports(Serial);
+
+        _Ros_at_transport_disconnected();
+
+        while (Serial.dtr() == 0)
+        {
+            DEBUG_PRINTLN(F("Esperando conexion a JETSON..."));
+            delay(1000);
+        }
+
+        _Ros_at_transport_conencted();
+
+        rclc_support_init(&_support, 0, NULL, &_allocator);
+        rclc_node_init_default(&_node, "micro_ros_arduino_node", "", &_support);
+
+        // subscriptions
+        rclc_subscription_init_default(&_sMsgToSauron, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(geometry_msgs, msg, Twist), "/tensey/msg");
+
+        // publishers-timers
+        rclc_publisher_init_default(&_pSensor, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String), "/tensey/sensor");
+        rclc_timer_init_default(&_tSensor, &_support, RCL_MS_TO_NS(1000), PUB_Sensor_cb);
+
+        rclc_publisher_init_default(&_pAlertSauron, &_node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String), "/tensey/alert");
+        rclc_timer_init_default(&_tAlertSauron, &_support, RCL_MS_TO_NS(1000), PUB_AlertSauron_cb);
+
+        // executors
+        rclc_executor_init(&_eMsgToSauron, &_support.context, 1, &_allocator);
+        rclc_executor_add_subscription(&_eMsgToSauron, &_sMsgToSauron, &_mMsgToSauron, &SUB_MsgToSauron_cb, ON_NEW_DATA);
+
+        rclc_executor_init(&_eSensor, &_support.context, 1, &_allocator);
+        rclc_executor_add_timer(&_eSensor, &_tSensor);
+
+        rclc_executor_init(&_eAlertSauron, &_support.context, 1, &_allocator);
+        rclc_executor_add_timer(&_eAlertSauron, &_tAlertSauron);
     }
     else
     {

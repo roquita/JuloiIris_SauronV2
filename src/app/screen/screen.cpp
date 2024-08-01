@@ -397,6 +397,14 @@ void screen_queue_LowBatery_Notificacion()
     notification.footer = "Aviso !!";
     screen_queue_Notification(&notification);
 }
+void screen_queue_SetupDone_Notificacion()
+{
+    screen_notification_t notification;
+    notification.color = SCREEN_COLOR_GREEN;
+    notification.content = "Setup Done";
+    notification.footer = "Exitoso !!";
+    screen_queue_Notification(&notification);
+}
 void screen_goto_MainPage()
 {
     nextion_select();
