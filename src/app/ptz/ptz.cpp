@@ -21,12 +21,12 @@ ptz_at_stop_cb_t _ptz_at_stop_cb = NULL;
 #define PTZ_MOVE_UP()                                              \
     {                                                              \
         BLD300B_driver1_set_direction(BLD300B_DIRECTION_REVERSED); \
-        BLD300B_driver1_set_duty(50);                              \
+        BLD300B_driver1_set_duty(20);                              \
     }
 #define PTZ_MOVE_DOWN()                                           \
     {                                                             \
         BLD300B_driver1_set_direction(BLD300B_DIRECTION_FORWARD); \
-        BLD300B_driver1_set_duty(50);                             \
+        BLD300B_driver1_set_duty(20);                             \
     }
 #define PTZ_STOP()                   \
     {                                \
