@@ -93,11 +93,11 @@ void BLD300B_driver1_init()
     digitalWrite(DRIVER_1_FR_PIN, BLD300B_DIRECTION_FORWARD);
     // speed
     analogWriteFrequency(DRIVER_1_SV_PIN, 2000.0);
-    analogWrite(DRIVER_1_SV_PIN, 255); // 0=100% - 255=0%
+    analogWrite(DRIVER_1_SV_PIN, 0); // 0=0% - 255=100%
 }
 void BLD300B_driver1_set_duty(int duty) // 0-100%
 {
-    float fduty = (100 - duty) / 100.0; // complement
+    float fduty = (duty) / 100.0; 
     int PwmVal = (int)(255 * fduty);
     analogWrite(DRIVER_1_SV_PIN, PwmVal);
 }
