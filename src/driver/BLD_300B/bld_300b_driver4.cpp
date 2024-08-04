@@ -3,6 +3,8 @@
 #include "../DEBUG/debug.h"
 #include "project_defines.h"
 
+BLD300B_at_fault_cb_t _BLD300B_at_fault_4_cb = NULL;
+BLD300B_at_NoFault_cb_t _BLD300B_at_NoFault_4_cb = NULL;
 BLD300B_alarm_t _driver4_alarm_status = BLD300B_ALARM_NONE;
 int _driver4_alarm_pulses = 0;
 int _driver4_alarm_time = 0;
@@ -12,50 +14,8 @@ int _driver4_speed_time_down = 0;
 
 void driver4_alarm_cb()
 {
-    int now = millis();
-    if (digitalRead(DRIVER_4_ALARM_PIN) == 1)
-    {
-        int elapsed = now - _driver4_alarm_time;
-        if (elapsed < 1100)
-        {
-            _driver4_alarm_pulses++;
-        }
-        else if (elapsed < 5100)
-        {
-            switch (_driver4_alarm_pulses)
-            {
-            case 2:
-                _driver4_alarm_status = BLD300B_ALARM_OVERVOLTAGE;
-                break;
-            case 3:
-                _driver4_alarm_status = BLD300B_ALARM_POWER_TUBE_OVERCURRENT;
-                break;
-            case 4:
-                _driver4_alarm_status = BLD300B_ALARM_OVERCURRENT;
-                break;
-            case 5:
-                _driver4_alarm_status = BLD300B_ALARM_UNDERVOLTAGE;
-                break;
-            case 6:
-                _driver4_alarm_status = BLD300B_ALARM_HALL;
-                break;
-            case 7:
-                _driver4_alarm_status = BLD300B_ALARM_LOCKED;
-                break;
-            case 8:
-                _driver4_alarm_status = BLD300B_ALARM_TWO_OR_MORE;
-                break;
-            default:
-                _driver4_alarm_status = BLD300B_ALARM_UNKNOWN;
-                break;
-            }
-            _driver4_alarm_pulses = 0;
-        }
-    }
-    else
-    {
-        _driver4_alarm_time = now;
-    }
+    bool fault_happenned = (digitalRead(DRIVER_4_ALARM_PIN) == 0);
+    fault_happenned ? _BLD300B_at_fault_4_cb() : _BLD300B_at_NoFault_4_cb();
 }
 void driver4_speed_cb()
 {
@@ -73,20 +33,24 @@ void driver4_speed_cb()
         _driver4_speed_time_down = now;
     }
 }
-void BLD300B_driver4_init()
+void BLD300B_driver4_init(BLD300B_at_fault_cb_t BLD300B_at_fault_cb, BLD300B_at_NoFault_cb_t BLD300B_at_NoFault_cb)
 {
+    // set callback
+    _BLD300B_at_fault_4_cb = BLD300B_at_fault_cb;
+    _BLD300B_at_NoFault_4_cb = BLD300B_at_NoFault_cb;
+
     // general
     analogWriteResolution(8);
 
     /***************************** DRIVER 5  ************************/
     // alarm
     pinMode(DRIVER_4_ALARM_PIN, INPUT);
-    //attachInterrupt(DRIVER_4_ALARM_PIN, driver5_alarm_cb, CHANGE);
+    attachInterrupt(DRIVER_4_ALARM_PIN, driver4_alarm_cb, CHANGE);
     _driver4_alarm_pulses = 0;
     _driver4_alarm_time = millis();
     // speed
     pinMode(DRIVER_4_SPEED_PIN, INPUT);
-    //attachInterrupt(DRIVER_4_SPEED_PIN, driver5_speed_cb, CHANGE);
+    // attachInterrupt(DRIVER_4_SPEED_PIN, driver5_speed_cb, CHANGE);
     _driver4_speed_duty = 0;
     // direction
     pinMode(DRIVER_4_FR_PIN, OUTPUT);

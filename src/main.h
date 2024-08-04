@@ -9,6 +9,7 @@
 #include "app/screen/screen.h"
 #include "app/wheel/wheel.h"
 #include "app/ptz/ptz.h"
+#include "app/alarm/alarm.h"
 #include "project_defines.h"
 
 #include "driver/UART_MUX/uart_mux.h"
@@ -37,3 +38,15 @@ void ptz_at_start_cb();
 void ptz_at_stop_cb();
 void ROS_at_transport_disconnected_cb();
 void ROS_at_transport_connected_cb();
+
+// MOTOR alarm callbacks
+void wheel_MotorFrontRight_at_fault();
+void wheel_MotorFrontRight_at_NoFault();
+void wheel_MotorFrontLeft_at_fault();
+void wheel_MotorFrontLeft_at_NoFault();
+void wheel_MotorBackRight_at_fault();
+void wheel_MotorBackRight_at_NoFault();
+void wheel_MotorBackLeft_at_fault();
+void wheel_MotorBackLeft_at_NoFault();
+void ptz_motor_at_fault();
+void ptz_motor_at_NoFault();
