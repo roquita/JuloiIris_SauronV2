@@ -10,8 +10,15 @@ void setup()
   load_init();
   distance_init();
   temphumi_init();
-  wheel_init(wheel_at_start_cb, wheel_at_stop_cb);
-  ptz_init(ptz_at_start_cb, ptz_at_stop_cb);
+
+  wheel_init(wheel_at_start_cb, wheel_at_stop_cb, 
+             wheel_MotorFrontRight_at_fault, wheel_MotorFrontRight_at_NoFault,
+             wheel_MotorFrontLeft_at_fault, wheel_MotorFrontLeft_at_NoFault,
+             wheel_MotorBackRight_at_fault, wheel_MotorBackRight_at_NoFault,
+             wheel_MotorBackLeft_at_fault, wheel_MotorBackLeft_at_NoFault);
+
+  ptz_init(ptz_at_start_cb, ptz_at_stop_cb,
+           ptz_motor_at_fault, ptz_motor_at_NoFault);
 
   ros_init(ROS_at_transport_disconnected_cb,
            ROS_at_transport_connected_cb,
@@ -36,7 +43,7 @@ void loop()
   if (interval_100ms_triggered())
   {
     ros_loop();
-   // distance_loop();
+    // distance_loop();
   }
 
   if (interval_500ms_triggered())
@@ -50,15 +57,15 @@ void loop()
 
   if (interval_2000ms_triggered())
   {
-    screen_print_DistanceFront(distance_get_Front_mm() );
-    screen_print_DistanceRightFront(distance_get_RightFront_mm() );
-    screen_print_DistanceRightMiddle(distance_get_RightMiddle_mm() );
-    screen_print_DistanceRightBack(distance_get_RightBack_mm() );
-    screen_print_DistanceLeftFront(distance_get_LeftFront_mm() );
-    screen_print_DistanceLeftMiddle(distance_get_LeftMiddle_mm() );
-    screen_print_DistanceLeftBack(distance_get_LeftBack_mm() );
-    screen_print_DistanceBackRight(distance_get_BackRight_mm() );
-    screen_print_DistanceBackLeft(distance_get_BackLeft_mm() );
+    screen_print_DistanceFront(distance_get_Front_mm());
+    screen_print_DistanceRightFront(distance_get_RightFront_mm());
+    screen_print_DistanceRightMiddle(distance_get_RightMiddle_mm());
+    screen_print_DistanceRightBack(distance_get_RightBack_mm());
+    screen_print_DistanceLeftFront(distance_get_LeftFront_mm());
+    screen_print_DistanceLeftMiddle(distance_get_LeftMiddle_mm());
+    screen_print_DistanceLeftBack(distance_get_LeftBack_mm());
+    screen_print_DistanceBackRight(distance_get_BackRight_mm());
+    screen_print_DistanceBackLeft(distance_get_BackLeft_mm());
 
     screen_print_EnvironmentTemperature(temphumi_get_temperature());
     screen_print_EnvironmentHumidity(temphumi_get_humidity());

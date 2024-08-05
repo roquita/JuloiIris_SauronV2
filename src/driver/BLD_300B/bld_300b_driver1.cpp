@@ -6,8 +6,6 @@
 BLD300B_at_fault_cb_t _BLD300B_at_fault_1_cb = NULL;
 BLD300B_at_NoFault_cb_t _BLD300B_at_NoFault_1_cb = NULL;
 BLD300B_alarm_t _driver1_alarm_status = BLD300B_ALARM_NONE;
-int _driver1_alarm_pulses = 0;
-int _driver1_alarm_time = 0;
 int _driver1_speed_duty = 0;
 int _driver1_speed_time_up = 0;
 int _driver1_speed_time_down = 0;
@@ -46,8 +44,6 @@ void BLD300B_driver1_init(BLD300B_at_fault_cb_t BLD300B_at_fault_cb, BLD300B_at_
     // alarm
     pinMode(DRIVER_1_ALARM_PIN, INPUT);
     attachInterrupt(DRIVER_1_ALARM_PIN, driver1_alarm_cb, CHANGE);
-    _driver1_alarm_pulses = 0;
-    _driver1_alarm_time = millis();
     // speed
     pinMode(DRIVER_1_SPEED_PIN, INPUT);
     //attachInterrupt(DRIVER_1_SPEED_PIN, driver5_speed_cb, CHANGE);

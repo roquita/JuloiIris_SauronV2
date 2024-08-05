@@ -21,8 +21,8 @@ void alarm_clear_MotorBackRight() { _MotorBackRight_alarm_triggered = false; }
 void alarm_clear_MotorBackLeft() { _MotorBackLeft_alarm_triggered = false; }
 void alarm_clear_MotorPtz() { _MotorPtz_alarm_triggered = false; }
 
-bool alarm_get_MotorFrontRight() { return _MotorFrontRight_alarm_triggered; }
-bool alarm_get_MotorFrontLeft() { return _MotorFrontLeft_alarm_triggered; }
-bool alarm_get_MotorBackRight() { return _MotorBackRight_alarm_triggered; }
-bool alarm_get_MotorBackLeft() { return _MotorBackLeft_alarm_triggered; }
-bool alarm_get_MotorPtz() { return _MotorPtz_alarm_triggered; }
+int alarm_get_MotorFrontRight() { return _MotorFrontRight_alarm_triggered ? 1 : 0; }
+int alarm_get_MotorFrontLeft() { return _MotorFrontLeft_alarm_triggered ? 1 : 0; }
+int alarm_get_MotorBackRight() { return _MotorBackRight_alarm_triggered ? 1 : 0; }
+int alarm_get_MotorBackLeft() { return _MotorBackLeft_alarm_triggered ? 1 : 0; }
+int alarm_get_MotorPtz() { return _MotorPtz_alarm_triggered ? 1 : 0; }

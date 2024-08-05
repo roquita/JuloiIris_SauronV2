@@ -18,7 +18,6 @@
 #include "driver/BLD_300B/bld_300b.h"
 #include "driver/NEXTION/nextion.h"
 
-
 // ros sub callbacks
 void SUB_Locomotion_app_cb(int direction, float velocity);
 void SUB_MaxVelocity_app_cb(int MaxVelocity);
@@ -31,15 +30,14 @@ void SUB_Battery_app_cb(int BatteryLevel);
 bool PUB_Sensor_app_cb(char *buffer, int *size);
 bool PUB_AlertSauron_app_cb(char *buffer, int *size);
 
-// MOTOR callbacks
-void wheel_at_start_cb();
-void wheel_at_stop_cb();
-void ptz_at_start_cb();
-void ptz_at_stop_cb();
+// ros callbacks
 void ROS_at_transport_disconnected_cb();
 void ROS_at_transport_connected_cb();
 
-// MOTOR alarm callbacks
+// wheel callbacks
+void wheel_at_start_cb();
+void wheel_at_stop_cb();
+
 void wheel_MotorFrontRight_at_fault();
 void wheel_MotorFrontRight_at_NoFault();
 void wheel_MotorFrontLeft_at_fault();
@@ -48,5 +46,10 @@ void wheel_MotorBackRight_at_fault();
 void wheel_MotorBackRight_at_NoFault();
 void wheel_MotorBackLeft_at_fault();
 void wheel_MotorBackLeft_at_NoFault();
+
+// ptz  callbacks
+void ptz_at_start_cb();
+void ptz_at_stop_cb();
+
 void ptz_motor_at_fault();
 void ptz_motor_at_NoFault();

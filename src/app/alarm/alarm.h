@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 void alarm_init();
 
 void alarm_set_MotorFrontRight();
@@ -16,9 +18,9 @@ void alarm_clear_MotorBackLeft();
 void alarm_clear_MotorPtz();
 
 
-bool alarm_get_MotorFrontRight();
-bool alarm_get_MotorFrontLeft();
-bool alarm_get_MotorBackRight();
-bool alarm_get_MotorBackLeft();
-bool alarm_get_MotorPtz();
+int alarm_get_MotorFrontRight();
+int alarm_get_MotorFrontLeft();
+int alarm_get_MotorBackRight();
+int alarm_get_MotorBackLeft();
+int alarm_get_MotorPtz();
 

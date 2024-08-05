@@ -3,21 +3,21 @@
 #include "../../driver/BLD_300B/bld_300b.h"
 #include "wheel.h"
 
-#define WHEEL_FRONT_RIGHT_INIT() \
-    {                            \
-        BLD300B_driver3_init();  \
+#define WHEEL_FRONT_RIGHT_INIT(fault_cb, NoFault_cb) \
+    {                                                \
+        BLD300B_driver3_init(fault_cb, NoFault_cb);  \
     }
-#define WHEEL_FRONT_LEFT_INIT() \
-    {                           \
-        BLD300B_driver2_init(); \
+#define WHEEL_FRONT_LEFT_INIT(fault_cb, NoFault_cb) \
+    {                                               \
+        BLD300B_driver2_init(fault_cb, NoFault_cb); \
     }
-#define WHEEL_BACK_RIGHT_INIT() \
-    {                           \
-        BLD300B_driver5_init(); \
+#define WHEEL_BACK_RIGHT_INIT(fault_cb, NoFault_cb) \
+    {                                               \
+        BLD300B_driver5_init(fault_cb, NoFault_cb); \
     }
-#define WHEEL_BACK_LEFT_INIT()  \
-    {                           \
-        BLD300B_driver4_init(); \
+#define WHEEL_BACK_LEFT_INIT(fault_cb, NoFault_cb)  \
+    {                                               \
+        BLD300B_driver4_init(fault_cb, NoFault_cb); \
     }
 
 #define WHEEL_FRONT_RIGHT_MOVE_FORWARD(x)                         \
@@ -73,14 +73,22 @@ int _wheel_MaxSpeed = 0;
 wheel_at_start_cb_t _wheel_at_start_cb = NULL;
 wheel_at_stop_cb_t _wheel_at_stop_cb = NULL;
 
-void wheel_init(wheel_at_start_cb_t wheel_at_start_cb, wheel_at_stop_cb_t wheel_at_stop_cb)
+void wheel_init(wheel_at_start_cb_t wheel_at_start_cb, wheel_at_stop_cb_t wheel_at_stop_cb,
+                wheel_at_motor_fault_cb_t FrontRight_fault_cb, wheel_at_motor_NoFault_cb_t FrontRight_NoFault_cb,
+                wheel_at_motor_fault_cb_t FrontLeft_fault_cb, wheel_at_motor_NoFault_cb_t FrontLeft_NoFault_cb,
+                wheel_at_motor_fault_cb_t BackRight_fault_cb, wheel_at_motor_NoFault_cb_t BackRight_NoFault_cb,
+                wheel_at_motor_fault_cb_t BackLeft_fault_cb, wheel_at_motor_NoFault_cb_t BackLeft_NoFault_cb)
 {
+    // para iniciar a velocidad maxima cero
     _wheel_MaxSpeed = 0;
-    WHEEL_FRONT_RIGHT_INIT();
-    WHEEL_FRONT_LEFT_INIT();
-    WHEEL_BACK_RIGHT_INIT();
-    WHEEL_BACK_LEFT_INIT();
 
+    // inicializar  ruedas
+    WHEEL_FRONT_RIGHT_INIT(FrontRight_fault_cb, FrontRight_NoFault_cb);
+    WHEEL_FRONT_LEFT_INIT(FrontLeft_fault_cb, FrontLeft_NoFault_cb);
+    WHEEL_BACK_RIGHT_INIT(BackRight_fault_cb, BackRight_NoFault_cb);
+    WHEEL_BACK_LEFT_INIT(BackLeft_fault_cb, BackLeft_NoFault_cb);
+
+    // callbacks a nivel de modulo wheel
     _wheel_at_start_cb = wheel_at_start_cb;
     _wheel_at_stop_cb = wheel_at_stop_cb;
 }

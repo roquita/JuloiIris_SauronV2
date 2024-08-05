@@ -2,8 +2,11 @@
 
 typedef void (*ptz_at_start_cb_t)(void);
 typedef void (*ptz_at_stop_cb_t)(void);
+typedef void (*ptz_at_motor_fault_cb_t)(void);
+typedef void (*ptz_at_motor_NoFault_cb_t)(void);
 
-void ptz_init(ptz_at_start_cb_t, ptz_at_stop_cb_t);
+void ptz_init(ptz_at_start_cb_t, ptz_at_stop_cb_t,
+              ptz_at_motor_fault_cb_t, ptz_at_motor_NoFault_cb_t);
 void ptz_MoveUp_by_pulse();
 void ptz_MoveDown_by_pulse();
 void ptz_MoveUp_by_limit();

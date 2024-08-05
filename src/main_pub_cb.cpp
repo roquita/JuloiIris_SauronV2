@@ -45,7 +45,11 @@ bool PUB_AlertSauron_app_cb(char *buffer, int *size)
                                       "\"uls\":%i,"
                                       "\"lls\":%i"
                                       "}",
-                       1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+                       1, 1, 1, 1, 1, 0, 0, 0, 1,
+                       alarm_get_MotorFrontRight(), alarm_get_MotorFrontLeft,
+                       alarm_get_MotorBackRight(), alarm_get_MotorBackLeft(),
+                       alarm_get_MotorPtz(),
+                       0, 0, 0, 0, 0);
   bool parsing_success = (bytes > 0) || (bytes < (*size));
   *size = bytes + 1;
   if (!parsing_success)

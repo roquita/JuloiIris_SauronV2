@@ -14,9 +14,9 @@ typedef enum
 ptz_at_start_cb_t _ptz_at_start_cb = NULL;
 ptz_at_stop_cb_t _ptz_at_stop_cb = NULL;
 
-#define PTZ_INIT()              \
-    {                           \
-        BLD300B_driver1_init(); \
+#define PTZ_INIT(at_fault_cb, at_NoFault_cb)              \
+    {                                                     \
+        BLD300B_driver1_init(at_fault_cb, at_NoFault_cb); \
     }
 #define PTZ_MOVE_UP()                                              \
     {                                                              \
@@ -88,9 +88,11 @@ void lower_LimitSwitch_cb()
     _ptz_position = 0;
 }
 
-void ptz_init(ptz_at_start_cb_t ptz_at_start_cb, ptz_at_stop_cb_t ptz_at_stop_cb)
+void ptz_init(ptz_at_start_cb_t ptz_at_start_cb, ptz_at_stop_cb_t ptz_at_stop_cb,
+              ptz_at_motor_fault_cb_t ptz_at_motor_fault_cb,
+              ptz_at_motor_NoFault_cb_t ptz_at_motor_NoFault_cb)
 {
-    PTZ_INIT();
+    PTZ_INIT(ptz_at_motor_fault_cb, ptz_at_motor_NoFault_cb);
     UPPER_LIMIT_SWITCH_INIT(upper_LimitSwitch_cb);
     LOWER_LIMIT_SWITCH_INIT(lower_LimitSwitch_cb);
 
