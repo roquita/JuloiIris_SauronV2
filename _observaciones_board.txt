@@ -1,3 +1,25 @@
 * uart mux por defecto tiene opto energizado en idle mode del uart:
     Debe ser desactivado por defecto.
 * En los drivers(pin SV), en el lado del mcu tiene pull-down 10k. Cambiar a pull-up 10k.
+
+* Asegurar que los acopladores sean de altar velocidad en los buses de comunicacion.
+* Asegurar que los drivers reciban duty 0% ante eventos de perdida de energia o inicializacion del sistema.
+* Colocar la resistencia de 1.8M en smd
+* Asegurar la potencia disipada por la fuente aislada 24v/5v
+* Cambiar a acople inductivo.
+* Habilitar el control de los pines EN y BRK en cada driver
+* Cambiar conector RJ45 por conector automovilistico. Se mantiene un conector por cada motor.
+* Cambiar el conector RJ11 por conector automovilistico. Se mantiene un conector por cada sensor. Igual para la pantalla.
+* Colocar fusible autoreseteable para las cargas de los reles.
+* Cambiar el modelo de acc, gyr, mag a todo en uno BNO055
+* En general asegurar el minimo consumo de energia del sistema en condiciones IDLE.
+* Cambiar  transport a uart. Usb solo para programacion y depuracion.
+* Teensy usb solo datos, no energia.
+* Usar terminales de colores de acuerdo al elemento.
+* Colocar leds  para señalizacion de energia y estado de tarjeta.
+* En los drivers, la correcion para el circuito de alarma y velocidad. El circuito del manual no funciona, usar la correcion hecha manualmente.
+* Verificar el retraso de propagacion en los canales multiplexados, para asegurar la velocidad requerida.
+* Hacer una tarjeta para cada driver, con el fin de no usar la bornera directamente, sino un comector automovilistico.
+* Hacer una tarjeta para evitar mucho cableado en las borneras riel din.
+
+* Evaluar el sensor de inclinacion y orientacion en modo asincrono.
